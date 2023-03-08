@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import {useMatch} from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import { Step as StepType } from '../../types';
 import './Steps.css';
 
@@ -12,7 +12,7 @@ export function Steps({ steps }: Props): JSX.Element {
       {' '}
       {steps.map((step, index) => (
         <Fragment key={step.route}>
-          <Step {...step}/>
+          <Step {...step} />
           {index !== steps.length - 1 && <b>{' > '}</b>}
         </Fragment>
       ))}{' '}
@@ -20,12 +20,7 @@ export function Steps({ steps }: Props): JSX.Element {
   );
 }
 
-function Step({name, route}: StepType): JSX.Element {
+function Step({ name, route }: StepType): JSX.Element {
   const match = !!useMatch(route);
-  return (
-    <div className={match ? 'active' : ''}>
-      {name}
-    </div>
-    );
-
+  return <div className={match ? 'step-active' : ''}>{name}</div>;
 }

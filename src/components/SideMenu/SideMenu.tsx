@@ -1,12 +1,17 @@
 import './SideMenu.css';
+import { Spinner } from '../Spinner';
+import { Checkmark, Failure } from '../icons';
+import {Heading} from "../Heading";
 
 export function SideMenu(): JSX.Element {
   return (
     <div className="sidebar">
       <menu>
-        <h1>Logo</h1>
-        <ul>Logo</ul>
-        <h1>Logo</h1>
+        <Heading>Logo</Heading>
+        <Spinner />
+        <Checkmark />
+        <Failure />
+        <Heading>Logo</Heading>
       </menu>
     </div>
   );
