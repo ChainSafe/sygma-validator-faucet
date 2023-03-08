@@ -1,16 +1,9 @@
 import { FC, SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { GENESIS_FORK_VERSION } from '../../utils/envVars';
-import {
-  BeaconChainStatus,
-  DepositKeyInterface,
-  DepositStatus,
-  TransactionStatus,
-  getExistingDepositsForPubkeys,
-  validateDepositKey,
-} from './validation';
+import { DepositDataJson } from '../../types/deposit';
 
-export const JSONDropzone: FC = () => {
+export const Dropzone: FC = () => {
   //component state
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
@@ -18,7 +11,7 @@ export const JSONDropzone: FC = () => {
 
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>();
-  const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface[]>();
+  const [depositFileKey, setDepositFileKey] = useState<DepositDataJson[]>();
   const [depositStatus, setDepositStatus] = useState<{
     pubkey: string;
     depositStatus: DepositStatus;
@@ -231,3 +224,5 @@ export const JSONDropzone: FC = () => {
     </div>
   );
 };
+
+// weapon main burger soup turtle husband oil cluster run minimum dove account expect together ten axis shallow rain concert inmate again liberty govern donor

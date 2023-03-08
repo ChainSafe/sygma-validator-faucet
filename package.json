@@ -35,8 +35,8 @@
   "devDependencies": {
     "@chainsafe/eslint-config": "^1.1.0",
     "@rushstack/eslint-patch": "^1.2.0",
-    "@types/node": "18",
     "@types/lodash": "^4.14.191",
+    "@types/node": "18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",

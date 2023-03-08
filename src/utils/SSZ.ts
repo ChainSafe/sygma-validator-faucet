@@ -5,8 +5,6 @@ import {
   ContainerType,
 } from '@chainsafe/ssz';
 
-export const bufferHex = (x: string): Buffer => Buffer.from(x, 'hex');
-
 export const DepositMessage = new ContainerType({
   fields: {
     pubkey: new ByteVectorType({
