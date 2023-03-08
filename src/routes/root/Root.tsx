@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Steps } from '../../components/Steps/Steps';
+import { Steps } from '../../components/Steps';
 import { Step } from '../../types';
 
 const steps: Step[] = [
