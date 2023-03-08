@@ -597,6 +597,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/router@npm:1.3.3":
+  version: 1.3.3
+  resolution: "@remix-run/router@npm:1.3.3"
+  checksum: e64594e5dea4e3228e84911535fa67023fd7feb2534e43e51b599a6bcd1cfa20f8ee5680416fb7963d882b5866d76f3979508e1db33451db3c8ff3622bb9dbdf
+  languageName: node
+  linkType: hard
+
 "@rushstack/eslint-patch@npm:^1.2.0":
   version: 1.2.0
   resolution: "@rushstack/eslint-patch@npm:1.2.0"
@@ -2996,6 +3003,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-router-dom@npm:^6.8.2":
+  version: 6.8.2
+  resolution: "react-router-dom@npm:6.8.2"
+  dependencies:
+    "@remix-run/router": 1.3.3
+    react-router: 6.8.2
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 209acd0db038ba6aa57da9377cab276f753690fd8bf4adb6a398600863707c4f63d84ecbcfc9e6f36222e685c8d868032e289c71081bc39debbdc6ed5cf464c2
+  languageName: node
+  linkType: hard
+
+"react-router@npm:6.8.2":
+  version: 6.8.2
+  resolution: "react-router@npm:6.8.2"
+  dependencies:
+    "@remix-run/router": 1.3.3
+  peerDependencies:
+    react: ">=16.8"
+  checksum: fc413951a5ce0abb0a343d6e49664d4d211f57a1494f12bf5ee46839cdb88d08770bcb734e648afb52ad428e2d6c137841479fb73b4cbaf1bcbc664b622b5ba4
+  languageName: node
+  linkType: hard
+
 "react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -3365,6 +3396,7 @@ __metadata:
     prettier: ^2.8.4
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-router-dom: ^6.8.2
     typescript: ^4.9.3
     vite: ^4.1.0
   languageName: unknown
