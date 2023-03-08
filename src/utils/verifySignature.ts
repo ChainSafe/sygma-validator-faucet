@@ -1,8 +1,8 @@
 import { bufferHex } from './bufferHex';
-import { DepositDataJson } from './validateDepositKey';
 import { verify } from '@chainsafe/bls';
 import { DOMAIN_DEPOSIT, EMPTY_ROOT, GENESIS_FORK_VERSION } from './envVars';
 import { ForkData, SigningData } from './SSZ';
+import { DepositDataJson } from "../types/deposit";
 
 export const verifySignature = (depositDatum: DepositDataJson): boolean => {
   const pubkeyBuffer = bufferHex(depositDatum.pubkey);
