@@ -4,5 +4,5 @@ interface Props {
   children: ReactNode;
 }
 export function Heading({ children }: Props): JSX.Element {
-  return <h1>{children}</h1>
+  return <h1>{children}</h1>;
 }

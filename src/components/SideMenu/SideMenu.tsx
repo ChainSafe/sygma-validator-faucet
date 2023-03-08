@@ -1,7 +1,7 @@
 import './SideMenu.css';
 import { Spinner } from '../Spinner';
 import { Checkmark, Failure } from '../icons';
-import {Heading} from "../Heading";
+import { Heading } from '../Heading';
 
 export function SideMenu(): JSX.Element {
   return (
