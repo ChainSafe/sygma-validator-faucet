@@ -26,7 +26,7 @@ export function Summary(): JSX.Element {
   };
   const handleBackClick = () => {
     console.log("do magic on click");
-    navigate("/connect");
+    wallet.disconnect();
   };
 
   return (

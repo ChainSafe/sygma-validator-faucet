@@ -2,7 +2,6 @@ import {createContext, PropsWithChildren, useContext, useState} from "react";
 import Web3Modal from "web3modal";
 import WalletConnect from "@walletconnect/web3-provider";
 import Web3 from "web3";
-import {useNavigate} from "react-router-dom";
 
 const web3Modal = new Web3Modal({
   network: 'goerli',
@@ -47,7 +46,7 @@ export function WalletContextProvider({ children }: PropsWithChildren) {
       setWeb3(new Web3(provider));
       return true;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       // TODO: better handling error if connection fails for any reason!
       return false;
     }
@@ -70,10 +69,8 @@ export const useWallet = () => useContext(WalletContext);
 
 type EnsuredWeb3WalletContext = Omit<WalletContextInterface, 'web3'> & { web3: Web3 };
 export const useEnsuredWallet = (): EnsuredWeb3WalletContext => {
-  const navigate = useNavigate();
   const wallet = useWallet();
-
-  if (wallet.web3 === null) navigate("/connect");
+  if (!wallet.web3) throw new Error("Wallet not connected");
   return wallet as EnsuredWeb3WalletContext;
 };
 

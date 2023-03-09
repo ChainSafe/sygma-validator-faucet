@@ -1,8 +1,10 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import _merge from 'lodash/merge';
+import {DepositKeyInterface} from "../components/JSONDropzone/validation";
 
 interface Data {
-
+  json?: DepositKeyInterface[],
+  txs?: string[],
 }
 
 interface StorageContextContextInterface {
@@ -21,7 +23,7 @@ const defaultState: StorageContextContextInterface = {
 
 const StorageContext = createContext<StorageContextContextInterface>(defaultState);
 
-const STORAGE_KEY = 'storage_key';
+const STORAGE_KEY = 'storage_key_v1';
 
 export function StorageContextProvider({ children }: PropsWithChildren): JSX.Element {
   const [data, setData] = useState<Data>({});
