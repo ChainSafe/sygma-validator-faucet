@@ -2,7 +2,7 @@
   eslint-disable camelcase
  */
 import _every from 'lodash/every';
-import bls from '@chainsafe/bls';
+import bls from '@chainsafe/bls/herumi';
 import compareVersions from 'compare-versions';
 import axios from 'axios';
 import {
@@ -147,6 +147,7 @@ export const verifySignature = (depositDatum: DepositKeyInterface): boolean => {
   const depositMessageBuffer = bufferHex(depositDatum.deposit_message_root);
   const domain = computeDomain(DOMAIN_DEPOSIT);
   const signingRoot = computeSigningRoot(depositMessageBuffer, domain);
+
   return bls.verify(pubkeyBuffer, signingRoot, signatureBuffer);
 };
 

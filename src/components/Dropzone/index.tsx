@@ -1,6 +1,6 @@
 import { FC, SyntheticEvent, useCallback, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { GENESIS_FORK_VERSION } from '../../utils/envVars';
+import { GENESIS_FORK_VERSION, GOERLI_CONTRACT_ADDRESS } from '../../utils/envVars';
 import {
   BeaconChainStatus,
   DepositKeyInterface,
@@ -18,11 +18,14 @@ export const JSONDropzone: FC = () => {
 
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface[]>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [depositStatus, setDepositStatus] = useState<{
     pubkey: string;
     depositStatus: DepositStatus;
   }>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [beaconChainAPIStatus, setBeaconChainAPIStatus] = useState<BeaconChainStatus>();
 
   const onFileDrop = (jsonFiles: Array<any>, rejectedFiles: FileRejection[]): void => {
@@ -39,15 +42,19 @@ export const JSONDropzone: FC = () => {
     if (jsonFiles.length === 1) {
       setIsFileStaged(true); // unstaged via handleFileDelete
       setIsFileAccepted(true); // rejected if BLS check fails
-      setDepositFileName(jsonFiles[0].name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      setDepositFileName(jsonFiles[0].name as string);
       const reader = new FileReader();
 
       reader.onload = async (event) => {
         if (event.target) {
           try {
-            const fileData: any[] = JSON.parse(event.target.result as string);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const fileData: DepositKeyInterface[] = JSON.parse(
+              event.target.result as string,
+            );
             // perform BLS check
-            if (await validateDepositKey(fileData as DepositKeyInterface[])) {
+            if (validateDepositKey(fileData)) {
               // add valid files to redux
               setDepositFileKey(
                 fileData.map((file: DepositKeyInterface) => ({
@@ -63,7 +70,8 @@ export const JSONDropzone: FC = () => {
                 const existingDepositPubkeys = existingDeposits.data.flatMap((x) =>
                   x.publickey.substring(2),
                 );
-                (fileData as DepositKeyInterface[]).forEach(async (file) => {
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
+                fileData.forEach(async (file) => {
                   if (existingDepositPubkeys.includes(file.pubkey)) {
                     setDepositStatus({
                       pubkey: file.pubkey,
@@ -79,6 +87,15 @@ export const JSONDropzone: FC = () => {
               } catch (error) {
                 setBeaconChainAPIStatus(BeaconChainStatus.DOWN);
               }
+
+              //Check of withdrawal credentials match goerli contract address
+              console.log(fileData[0].withdrawal_credentials.substring(24));
+              if (
+                `0x${fileData[0].withdrawal_credentials.substring(24)}` !==
+                GOERLI_CONTRACT_ADDRESS
+              ) {
+                handleWithdrawalAddressNotMatching();
+              }
             } else {
               // file is JSON but did not pass BLS, so leave it "staged" but not "accepted"
               setIsFileAccepted(false);
@@ -86,7 +103,9 @@ export const JSONDropzone: FC = () => {
               flushDropzoneCache();
 
               // there are a couple special cases that can occur
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               const { fork_version: forkVersion } = fileData[0] || {};
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               const hasCorrectStructure = checkJsonStructure(fileData[0] || {});
               if (
                 hasCorrectStructure &&
@@ -107,10 +126,12 @@ export const JSONDropzone: FC = () => {
           }
         }
       };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       reader.readAsText(jsonFiles[0]);
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function handleSubmit(): void {
     // if (workflow === WorkflowStep.UPLOAD_VALIDATOR_FILE) {
     //   dispatchWorkflowUpdate(WorkflowStep.CONNECT_WALLET);
@@ -176,6 +197,10 @@ export const JSONDropzone: FC = () => {
 
   const handleSevereError = (): void => {
     setFileError(<div>Couldn't upload {depositFileName} due to an error.</div>);
+  };
+
+  const handleWithdrawalAddressNotMatching = (): void => {
+    setFileError(<div>Withdrawal address doesn't match goerli contract address</div>);
   };
 
   const renderMessage = useMemo((): JSX.Element => {
