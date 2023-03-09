@@ -1,4 +1,6 @@
-import { FC } from 'react';
+import { Outlet } from 'react-router-dom';
+import { SideMenu } from './components/SideMenu';
+import './App.css';
 import { JSONDropzone } from './components/Dropzone';
 // import WalletConnect from '@walletconnect/web3-provider';
 // import Web3Modal from 'web3modal';
@@ -19,7 +21,7 @@ import { JSONDropzone } from './components/Dropzone';
 //   },
 // });
 
-export const App: FC = () => {
+export function App(): JSX.Element {
   // const [web3, setWeb3] = useState<Web3 | null>(null);
   // const onConnect = async (): Promise<void> => {
   //   const provider = await web3Modal.connect();
@@ -40,19 +42,11 @@ export const App: FC = () => {
   //     );
   //   }
   // };
-
   return (
-    <div className="App">
-      {/* <button onClick={onConnect}>+</button>
-      <button onClick={disconnectWeb3Modal}>-</button>
-
-      <button onClick={callContractMethod}>Call contract method</button> */}
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
+    <>
+      <Outlet />
+      <SideMenu />
       <JSONDropzone></JSONDropzone>
-    </div>
+    </>
   );
-};
+}
