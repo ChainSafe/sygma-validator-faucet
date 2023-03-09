@@ -16,11 +16,12 @@
     "lint:style": "eslint --color --ext .ts,.tsx src/",
     "lint:types": "tsc --noEmit --pretty",
     "lint:fix:style": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
-    "lint:fix:code": "yarn run lint --fix"
+    "lint:fix:code": "yarn run lint:style --fix"
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.2"
   },
   "devDependencies": {
     "@chainsafe/eslint-config": "^1.1.0",
@@ -32,6 +33,7 @@
     "eslint": "^8.35.0",
     "prettier": "^2.8.4",
     "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "vite-plugin-svgr": "^2.4.0"
   }
 }
