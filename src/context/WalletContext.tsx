@@ -2,6 +2,8 @@ import {createContext, PropsWithChildren, useContext, useState} from "react";
 import Web3Modal from "web3modal";
 import WalletConnect from "@walletconnect/web3-provider";
 import Web3 from "web3";
+import {EIP1193Provider} from "web3-types/lib/web3_base_provider";
+import {getNetwork} from "../utils/network";
 
 const web3Modal = new Web3Modal({
   network: 'goerli',
@@ -21,6 +23,7 @@ interface WalletContextInterface {
   web3: Web3 | null;
   connect: () => Promise<boolean>;
   disconnect: () => void;
+  ensureNetwork: (network: string) => Promise<boolean>;
 }
 
 /**
@@ -31,6 +34,7 @@ const defaultState: WalletContextInterface = {
   web3: null,
   connect: () => { return Promise.resolve(false) },
   disconnect: () => {},
+  ensureNetwork: (network: string) => { return Promise.resolve(false) },
 };
 
 const WalletContext = createContext<WalletContextInterface>(defaultState);
@@ -58,8 +62,45 @@ export function WalletContextProvider({ children }: PropsWithChildren) {
     console.log('cleared cached provider');
   };
 
+  const ensureNetwork = async (network: string): Promise<boolean> => {
+    if (web3 === null) return false;
+    const chainId = await web3.eth.getChainId();
+    const chainIdHex = `0x${chainId.toString(16)}`;
+
+    console.log("start", network, chainIdHex);
+
+    if (network === chainIdHex) return true;
+    const provider = web3.currentProvider as EIP1193Provider<{}>;
+
+    console.log("before switch");
+
+    try {
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{
+          chainId: network,
+        }]
+      });
+      return true;
+    } catch (switchError) {
+      console.log(switchError);
+
+      // TODO remove ts ignore;
+      // @ts-ignore
+      if (switchError.code === 4902) {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [getNetwork(network)]
+        });
+        return true;
+      }
+    }
+
+    return true;
+  };
+
   return (
-    <WalletContext.Provider value={{ web3, connect, disconnect }}>
+    <WalletContext.Provider value={{ web3, connect, disconnect, ensureNetwork }}>
       {children}
     </WalletContext.Provider>
   );

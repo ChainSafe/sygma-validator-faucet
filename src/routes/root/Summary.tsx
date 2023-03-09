@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useEnsuredWallet} from "../../context/WalletContext";
 import Contract from "web3-eth-contract";
 import { DemoAbi as Abi } from '../../abi';
+import {useEffect} from "react";
 
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
@@ -28,6 +29,10 @@ export function Summary(): JSX.Element {
     console.log("do magic on click");
     wallet.disconnect();
   };
+
+  useEffect(() => {
+    void wallet.ensureNetwork("0x507");
+  }, [wallet]);
 
   return (
     <>
