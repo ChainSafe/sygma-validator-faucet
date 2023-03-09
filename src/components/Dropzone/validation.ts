@@ -2,7 +2,7 @@
   eslint-disable camelcase
  */
 import _every from 'lodash/every';
-import { initBLS, verify } from '@chainsafe/bls';
+import bls from '@chainsafe/bls';
 import compareVersions from 'compare-versions';
 import axios from 'axios';
 import {
@@ -147,7 +147,7 @@ export const verifySignature = (depositDatum: DepositKeyInterface): boolean => {
   const depositMessageBuffer = bufferHex(depositDatum.deposit_message_root);
   const domain = computeDomain(DOMAIN_DEPOSIT);
   const signingRoot = computeSigningRoot(depositMessageBuffer, domain);
-  return verify(pubkeyBuffer, signingRoot, signatureBuffer);
+  return bls.verify(pubkeyBuffer, signingRoot, signatureBuffer);
 };
 
 const validateFieldFormatting = (depositDatum: DepositKeyInterface): boolean => {
@@ -213,11 +213,7 @@ const validateFieldFormatting = (depositDatum: DepositKeyInterface): boolean => 
   return true;
 };
 
-export const validateDepositKey = async (
-  files: DepositKeyInterface[],
-): Promise<boolean> => {
-  await initBLS();
-
+export const validateDepositKey = (files: DepositKeyInterface[]): boolean => {
   if (!Array.isArray(files)) return false;
   if (files.length <= 0) return false;
 
