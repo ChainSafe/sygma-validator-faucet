@@ -1,6 +1,6 @@
-import {createBrowserRouter, Navigate} from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { App } from '../App';
-import {ConnectWallet, Root, Summary, Transactions, Upload} from './root';
+import { ConnectWallet, Root, Summary, Transactions, Upload } from './root';
 import ErrorPage from './ErrorPage';
 
 export const router = createBrowserRouter([

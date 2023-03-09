@@ -1,10 +1,10 @@
-import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import _merge from 'lodash/merge';
-import {DepositKeyInterface} from "../components/JSONDropzone/validation";
+import { DepositKeyInterface } from '../components/JSONDropzone/validation';
 
 interface Data {
-  json?: DepositKeyInterface[],
-  txs?: string[],
+  json?: DepositKeyInterface[];
+  txs?: string[];
 }
 
 interface StorageContextContextInterface {
@@ -29,13 +29,13 @@ export function StorageContextProvider({ children }: PropsWithChildren): JSX.Ele
   const [data, setData] = useState<Data>({});
   const [isReady, setIsReady] = useState(false);
 
-  const load = () => {
+  const load = (): void => {
     const storage = sessionStorage.getItem(STORAGE_KEY);
-    console.log("storage", storage);
+    console.log('storage', storage);
     if (storage === null) return;
-    setData(JSON.parse(storage));
+    setData(JSON.parse(storage) as Data);
   };
-  const update = (newData: Data) => {
+  const update = (newData: Data): void => {
     setData((current) => {
       const newState = _merge(current, newData);
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
@@ -52,7 +52,8 @@ export function StorageContextProvider({ children }: PropsWithChildren): JSX.Ele
     <StorageContext.Provider value={{ data, isReady, load, update }}>
       {children}
     </StorageContext.Provider>
-  )
+  );
 }
 
-export const useStorage = () => useContext(StorageContext);
+export const useStorage = (): StorageContextContextInterface =>
+  useContext(StorageContext);

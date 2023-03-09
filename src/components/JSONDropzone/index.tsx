@@ -1,1 +1,1 @@
-export {JSONDropzone} from "./JSONDropzone";
+export { JSONDropzone } from './JSONDropzone';

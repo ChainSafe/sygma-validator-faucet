@@ -4,9 +4,9 @@ import React, {
   PropsWithChildren,
   Reducer,
   useReducer,
-} from "react";
-import { ActionMap } from "../utils";
-import Web3 from "web3";
+} from 'react';
+import Web3 from 'web3';
+import { ActionMap } from '../utils';
 
 export enum AppStakeEnum {
   UPLOAD,
@@ -45,9 +45,10 @@ type AppStatePayload = {
 export type AppStateDispatch =
   ActionMap<AppStatePayload>[keyof ActionMap<AppStatePayload>];
 
-export const ClaimContext = createContext<
-  [AppState, Dispatch<AppStateDispatch>]
->([initialState, () => {}]);
+export const ClaimContext = createContext<[AppState, Dispatch<AppStateDispatch>]>([
+  initialState,
+  () => {},
+]);
 
 const reducer: Reducer<AppState, AppStateDispatch> = (state, action) => {
   switch (action.type) {
@@ -75,9 +76,7 @@ const reducer: Reducer<AppState, AppStateDispatch> = (state, action) => {
   }
 };
 
-export const ClaimContextProvider = (
-  props: PropsWithChildren<{}>
-): JSX.Element => {
+export const ClaimContextProvider = (props: PropsWithChildren<{}>): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (

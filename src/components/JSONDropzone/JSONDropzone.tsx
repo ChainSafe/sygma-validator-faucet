@@ -1,6 +1,7 @@
-import {FC, SyntheticEvent, useCallback, useEffect, useMemo, useState} from 'react';
+import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { GENESIS_FORK_VERSION, GOERLI_CONTRACT_ADDRESS } from '../../utils/envVars';
+import { useStorage } from '../../context/StorageContext';
 import {
   BeaconChainStatus,
   DepositKeyInterface,
@@ -9,7 +10,6 @@ import {
   getExistingDepositsForPubkeys,
   validateDepositKey,
 } from './validation';
-import {useStorage} from "../../context/StorageContext";
 
 export const JSONDropzone: FC = () => {
   const storage = useStorage();
@@ -22,7 +22,9 @@ export const JSONDropzone: FC = () => {
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface[] | undefined>(storage.data.json);
+  const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface[] | undefined>(
+    storage.data.json,
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [depositStatus, setDepositStatus] = useState<{
     pubkey: string;
