@@ -8,6 +8,11 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
 jobs:
   lint:
     name: Lint
@@ -24,7 +29,7 @@ jobs:
       - name: Lint
         run: yarn run lint
   build:
-    name: Build
+    name: Build and Deploy
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -38,3 +43,12 @@ jobs:
         run: yarn --immutable
       - name: Build
         run: yarn build
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 2238a825c5aca59233eab1f221f7aefb
+          projectName: goerli-validator-faucet
+          directory: ./dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref || github.ref_name }}
