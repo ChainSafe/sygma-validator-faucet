@@ -1,0 +1,39 @@
+@use './colors.scss';
+
+$btn-color-disabled: #69718c;
+$btn-bg-active: #ed6c39;
+
+.btn {
+  height: 40px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  text-align: center;
+
+  &-primary {
+    background-color: $orange;
+    color: $text-blue;
+  }
+
+  &-active {
+    background-color: $btn-bg-active;
+    color: $text-blue;
+  }
+
+
+  &-secondary {
+    background-color: $blue-500;
+    color: $text-white;
+  }
+
+  &-secondary-active {
+    background-color: $blue-500;
+    color: $text-white;
+  }
+
+  &-disabled,
+  &-secondary-disabled {
+    background-color: $grey-300;
+    color: $btn-color-disabled;
+  }
+}

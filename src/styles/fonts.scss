@@ -1,0 +1,22 @@
+@import 'colors';
+
+$font-inter: 'Inter';
+$font-family-main: $font-inter, sans-serif;
+$letter-spacing: $letter-spacing;
+
+@font-face {
+    font-family: $font-inter;
+    font-weight: 600;
+    src: url(../assets//fonts/Inter-SemiBold.ttf) format('truetype');
+    letter-spacing: $letter-spacing;
+}
+
+@font-face {
+    font-family: $font-inter;
+    font-weight: 400;
+    src: url(../assets//fonts/Inter-Regular.ttf) format('truetype');
+    letter-spacing: $letter-spacing;
+}
+
+
+

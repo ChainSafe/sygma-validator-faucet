@@ -1,0 +1,21 @@
+@import './fonts.scss';
+
+html, body {
+    font: $font-family, 400, 18px;
+    letter-spacing: $letter-spacing;
+}
+
+h1 { 
+    font: $font-family, 600, 24px;
+    letter-spacing: $letter-spacing;
+}
+
+button {
+    font: $font-family, 600, 18px;
+    letter-spacing: $letter-spacing;
+}
+
+ul, li {
+    font: $font-family, 400, 16px;
+    letter-spacing: $letter-spacing;
+}
