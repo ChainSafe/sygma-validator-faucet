@@ -5,6 +5,8 @@ import WalletConnect from '@walletconnect/web3-provider';
 import Web3Modal from 'web3modal';
 import { DemoAbi as Abi } from '../../abi';
 import {Heading} from "../../components/Heading";
+import {useNavigate} from "react-router-dom";
+import {Button} from "../../components/Button";
 
 
 const web3Modal = new Web3Modal({
@@ -42,9 +44,17 @@ export function ConnectWallet(): JSX.Element {
       );
     }
   };
+
+  const navigate = useNavigate();
+  const handleConnectClick = () => {
+    console.log("do magic on click");
+    navigate("/summary");
+  };
+
   return (
     <>
       <Heading>Step 2: Connect Wallet</Heading>
+      <Button onClick={handleConnectClick}>Connect</Button>
     </>
   )
 }
