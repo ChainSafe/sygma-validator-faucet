@@ -2,10 +2,17 @@ import {Heading} from "../../components/Heading";
 import {JSONDropzone} from "../../components/JSONDropzone";
 import {Button} from "../../components/Button";
 import { useNavigate } from "react-router-dom";
+import {useStorage} from "../../context/StorageContext";
+
 export function Upload(): JSX.Element {
   const navigate = useNavigate();
+  const storage = useStorage();
+
   const handleContinueClick = () => {
     console.log("do magic on click");
+    // TODO: store data from JSON Dropzone
+    storage.update({});
+
     navigate("/connect");
   };
 
