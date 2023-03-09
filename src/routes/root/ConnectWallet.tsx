@@ -1,9 +1,10 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import Web3 from "web3";
 import Contract from "web3-eth-contract";
 import WalletConnect from '@walletconnect/web3-provider';
 import Web3Modal from 'web3modal';
 import { DemoAbi as Abi } from '../../abi';
+import {Heading} from "../../components/Heading";
 
 
 const web3Modal = new Web3Modal({
@@ -20,7 +21,7 @@ const web3Modal = new Web3Modal({
   },
 });
 
-export const ConnectWallet: FC = () => {
+export function ConnectWallet(): JSX.Element {
     const [web3, setWeb3] = useState<Web3 | null>(null);
   const onConnect = async (): Promise<void> => {
     const provider = await web3Modal.connect();
@@ -42,8 +43,8 @@ export const ConnectWallet: FC = () => {
     }
   };
   return (
-    <div>
-      <button onClick={onConnect}>Connect</button>
-    </div>
+    <>
+      <Heading>Step 2: Connect Wallet</Heading>
+    </>
   )
 }

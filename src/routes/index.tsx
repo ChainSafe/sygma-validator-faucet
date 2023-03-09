@@ -1,11 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { App } from '../App';
-import { Root } from './root';
+import {ConnectWallet, Root, Summary, Transactions, Upload} from './root';
 import ErrorPage from './ErrorPage';
-import { JSONDropzone } from '../components/Dropzone';
-import { ConnectWallet } from '../components/ConnectWallet';
-import { Summary } from '../components/Summary';
-import { Transactions } from '../components/Transactions';
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +15,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/',
-            element: <JSONDropzone />,
+            element: <Upload />,
           },
           {
             path: '/connect',

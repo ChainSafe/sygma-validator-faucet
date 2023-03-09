@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Steps } from '../../components/Steps';
 import { Step } from '../../types';
-import { SideMenu } from '../../components/SideMenu';
 
 const steps: Step[] = [
   { name: 'Upload Deposit Data', route: '/' },
