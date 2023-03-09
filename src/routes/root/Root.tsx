@@ -1,11 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import { Steps } from '../../components/Steps';
 import { Step } from '../../types';
+import { SideMenu } from '../../components/SideMenu';
 
 const steps: Step[] = [
-  { name: 'A', route: '/' },
-  { name: 'B', route: '/b' },
-  { name: 'C', route: '/c' },
+  { name: 'Upload Deposit Data', route: '/' },
+  { name: 'Connect Wallet', route: '/connect' },
+  { name: 'Summary', route: '/summary' },
+  { name: 'Transactions', route: '/transactions' },
 ];
 
 export function Root(): JSX.Element {
