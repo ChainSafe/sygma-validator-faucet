@@ -1,39 +1,46 @@
 @use './colors.scss';
+@use './fonts.scss';
 
 $btn-color-disabled: #69718c;
 $btn-bg-active: #ed6c39;
 
-.btn {
+button {
+  cursor: pointer;
+  padding: 5px 24px;
   height: 40px;
-  padding: 16px 24px;
   border-radius: 12px;
-  font-size: 18px;
   text-align: center;
+  font-size: 1.125rem;
+  font-weight: 500;
+  font-family: $font-family-main;
+  outline: none;
+  border: none;
+}
 
+.btn {
   &-primary {
     background-color: $orange;
     color: $text-blue;
   }
 
-  &-active {
+  &-primary:active {
     background-color: $btn-bg-active;
     color: $text-blue;
   }
 
-
   &-secondary {
+    background-color: $grey-500;
+    color: $text-white;
+  }
+
+  &-secondary:active {
     background-color: $blue-500;
     color: $text-white;
   }
 
-  &-secondary-active {
-    background-color: $blue-500;
-    color: $text-white;
-  }
-
-  &-disabled,
-  &-secondary-disabled {
-    background-color: $grey-300;
+  &:disabled,
+  &-secondary:disabled {
+    background-color: $grey-400;
     color: $btn-color-disabled;
   }
 }

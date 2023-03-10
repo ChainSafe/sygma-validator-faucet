@@ -1,21 +1,32 @@
-@import './fonts.scss';
+@use './fonts.scss';
 
-html, body {
-    font: $font-family, 400, 18px;
-    letter-spacing: $letter-spacing;
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
 
-h1 { 
-    font: $font-family, 600, 24px;
-    letter-spacing: $letter-spacing;
+h1 {
+  font-family: $font-family-main;
+  font-weight: 600;
+  font-size: 1.5rem;
 }
 
-button {
-    font: $font-family, 600, 18px;
-    letter-spacing: $letter-spacing;
+ul,
+li {
+  font-family: $font-family-main;
+  font-weight: 400;
+  font-size: 1rem;
 }
 
-ul, li {
-    font: $font-family, 400, 16px;
-    letter-spacing: $letter-spacing;
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
 }

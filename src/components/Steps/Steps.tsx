@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { useMatch } from 'react-router-dom';
 import { Step as StepType } from '../../types';
-import './Steps.css';
+import './Steps.scss';
 
 interface Props {
   steps: StepType[];
