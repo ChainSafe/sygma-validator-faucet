@@ -2,22 +2,19 @@ $font-inter: Inter;
 $font-family-main: $font-inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
 @font-face {
-    font-family: $font-inter;
-    font-weight: 600;
-    src: url(../assets/fonts/Inter-SemiBold.ttf) format('truetype');
+  font-family: $font-inter;
+  font-weight: 600;
+  src: url(../assets/fonts/Inter-SemiBold.ttf) format('truetype');
 }
 
 @font-face {
-    font-family: $font-inter;
-    font-weight: 500;
-    src: url(../assets/fonts/Inter-Medium.ttf) format('truetype');
+  font-family: $font-inter;
+  font-weight: 500;
+  src: url(../assets/fonts/Inter-Medium.ttf) format('truetype');
 }
 
 @font-face {
-    font-family: $font-inter;
-    font-weight: 400;
-    src: url(../assets/fonts/Inter-Regular.ttf) format('truetype');
+  font-family: $font-inter;
+  font-weight: 400;
+  src: url(../assets/fonts/Inter-Regular.ttf) format('truetype');
 }
-
-
-

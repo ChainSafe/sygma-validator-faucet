@@ -46,9 +46,11 @@ export function App(): JSX.Element {
       <Outlet />
       <SideMenu />
       <div>
-        <button className='btn btn-primary'>Primary Button</button>
-        <button className='btn btn-secondary'>Secondary Button</button>
-        <button disabled className='btn btn-secondary'>Disabled Button</button>
+        <button className="btn btn-primary">Primary Button</button>
+        <button className="btn btn-secondary">Secondary Button</button>
+        <button disabled className="btn btn-secondary">
+          Disabled Button
+        </button>
       </div>
       <JSONDropzone></JSONDropzone>
     </>
