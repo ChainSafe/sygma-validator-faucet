@@ -17,6 +17,7 @@ export function Summary(): JSX.Element {
   const navigate = useNavigate();
   const handleBridgeClick = (): void => {
     console.log('do magic on click');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const contract: Contract<typeof Abi> = new wallet.web3.eth.Contract(
       Abi,
       '0x9d15e18Aed0568FB829b857BA1acd1ac8fd68474',

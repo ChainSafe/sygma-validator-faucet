@@ -13,6 +13,7 @@ const web3Modal = new Web3Modal({
     walletconnect: {
       package: WalletConnect,
       options: {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         infuraId: import.meta.env.REACT_APP_INFURA_PROJECT_ID,
       },
     },

@@ -21,6 +21,7 @@ import {
   MIN_DEPOSIT_CLI_VERSION,
   BEACONCHAIN_URL,
 } from '../../utils/envVars';
+import { Network } from '../../utils/network';
 
 interface BeaconchainDepositDataInterface {
   amount: number;
@@ -55,6 +56,7 @@ export interface DepositKeyInterface {
   transactionStatus: TransactionStatus;
   txHash?: string;
   depositStatus: DepositStatus;
+  network?: Network;
 }
 
 export enum TransactionStatus {

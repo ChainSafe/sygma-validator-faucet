@@ -1,17 +1,17 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { JSONDropzone } from '../../components/JSONDropzone';
 import { Button } from '../../components/Button';
-import { useStorage } from '../../context/StorageContext';
+
+import { DepositKeyInterface } from '../../components/JSONDropzone/validation';
 
 export function Upload(): JSX.Element {
   const navigate = useNavigate();
-  const storage = useStorage();
+  const [depositJSON, setDepositJSON] = useState<DepositKeyInterface>();
 
   const handleContinueClick = (): void => {
     console.log('do magic on click');
-    // TODO: store data from JSON Dropzone
-    storage.update({});
 
     navigate('/connect');
   };
@@ -23,8 +23,8 @@ export function Upload(): JSX.Element {
         Have you generated your mnemonic and validator public keys? If not, you can do so
         here.
       </div>
-      <JSONDropzone />
-      <Button onClick={handleContinueClick}>Continue</Button>
+      <JSONDropzone JSONReady={(JSON) => setDepositJSON(JSON)} />
+      {depositJSON && <Button onClick={handleContinueClick}>Continue</Button>}
     </>
   );
 }

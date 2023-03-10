@@ -16,4 +16,5 @@ export const EMPTY_ROOT = Buffer.from(
   'hex',
 );
 
-export const GOERLI_CONTRACT_ADDRESS = '';
+export const GOERLI_DEPOSIT_ADAPTER_MOONBASE = '0x54970b330db38b090dc03cefc9f2013b33af2b52';
+export const GOERLI_DEPOSIT_ADAPTER_MUMBAI = '0x9C542e76BcB15240ac66326933b9BC3eAC7Cb331';

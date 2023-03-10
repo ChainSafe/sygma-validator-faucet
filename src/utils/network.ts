@@ -1,4 +1,4 @@
-interface Network {
+export interface Network {
   chainId: string; // A 0x-prefixed hexadecimal string
   chainName: string;
   nativeCurrency: {
@@ -9,7 +9,7 @@ interface Network {
   rpcUrls: string[];
 }
 
-const networks: Network[] = [
+export const networks: Network[] = [
   {
     chainId: '0x507',
     chainName: 'Moonbase Alpha',

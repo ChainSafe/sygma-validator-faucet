@@ -3,7 +3,7 @@ import _merge from 'lodash/merge';
 import { DepositKeyInterface } from '../components/JSONDropzone/validation';
 
 interface Data {
-  json?: DepositKeyInterface[];
+  json?: DepositKeyInterface;
   txs?: string[];
 }
 
