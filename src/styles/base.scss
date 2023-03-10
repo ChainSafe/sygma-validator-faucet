@@ -1,5 +1,5 @@
-@import './colors.scss';
-@import './fonts.scss';
+@use './colors.scss';
+@use './fonts.scss';
 
 #root {
   max-width: 1280px;
