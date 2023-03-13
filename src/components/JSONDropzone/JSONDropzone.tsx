@@ -1,6 +1,6 @@
 import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { GENESIS_FORK_VERSION, GOERLI_DEPOSIT_ADAPTER_MOONBASE, GOERLI_DEPOSIT_ADAPTER_MUMBAI } from '../../utils/envVars';
+import { GENESIS_FORK_VERSION, DEPOSIT_ADAPTER_TARGET } from '../../utils/envVars';
 import {
   DepositKeyInterface,
   DepositStatus,
@@ -8,7 +8,6 @@ import {
   getExistingDepositsForPubkeys,
   validateDepositKey,
 } from './validation';
-import { getNetwork, networks } from '../../utils/network';
 
 interface JSONDropzone {
   JSONReady: (deposit: DepositKeyInterface) => void;
@@ -81,22 +80,12 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady }) => {
                   if (
                     `0x${fileData[0].withdrawal_credentials.substring(
                       24,
-                    )}`.toLowerCase() === GOERLI_DEPOSIT_ADAPTER_MOONBASE.toLowerCase()
+                    )}`.toLowerCase() === DEPOSIT_ADAPTER_TARGET.toLowerCase()
                   ) {
                     setDepositFileKey({
                       ...fileData[0],
                       transactionStatus: TransactionStatus.READY,
                       depositStatus: DepositStatus.READY_FOR_DEPOSIT,
-                      network: getNetwork("0x507")
-                    });
-                  } else if (`0x${fileData[0].withdrawal_credentials.substring(
-                    24,
-                  )}`.toLowerCase() === GOERLI_DEPOSIT_ADAPTER_MUMBAI.toLowerCase()) {
-                    setDepositFileKey({
-                      ...fileData[0],
-                      transactionStatus: TransactionStatus.READY,
-                      depositStatus: DepositStatus.READY_FOR_DEPOSIT,
-                      network: getNetwork("0x13881")
                     });
                   } else {
                     handleWithdrawalAddressNotMatching();
