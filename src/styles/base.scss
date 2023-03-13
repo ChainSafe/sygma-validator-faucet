@@ -1,0 +1,19 @@
+@use './colors.scss';
+@use './fonts.scss';
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: $blue-700;
+}
+
+:root {
+  font-size: 16px;
+  font-family: $font-family-main;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: $blue-700;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}

@@ -1,4 +1,4 @@
-import './SideMenu.css';
+import './SideMenu.scss';
 import { Spinner } from '../Spinner';
 import { Checkmark, Failure } from '../icons';
 import { Heading } from '../Heading';

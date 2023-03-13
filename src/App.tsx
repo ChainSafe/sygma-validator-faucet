@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import { SideMenu } from './components/SideMenu';
-import './App.css';
 import { JSONDropzone } from './components/Dropzone';
 // import WalletConnect from '@walletconnect/web3-provider';
 // import Web3Modal from 'web3modal';
@@ -46,6 +45,13 @@ export function App(): JSX.Element {
     <>
       <Outlet />
       <SideMenu />
+      <div>
+        <button className="btn btn-primary">Primary Button</button>
+        <button className="btn btn-secondary">Secondary Button</button>
+        <button disabled className="btn btn-secondary">
+          Disabled Button
+        </button>
+      </div>
       <JSONDropzone></JSONDropzone>
     </>
   );
