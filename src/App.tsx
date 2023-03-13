@@ -3,15 +3,18 @@ import { SideMenu } from './components/SideMenu';
 import './App.css';
 import { WalletContextProvider } from './context/WalletContext';
 import { StorageContextProvider } from './context/StorageContext';
+import { FlowContextProvider } from './context/FlowContext';
 
 export function App(): JSX.Element {
   return (
     <WalletContextProvider>
       <StorageContextProvider>
-        <>
-          <Outlet />
-          <SideMenu />
-        </>
+        <FlowContextProvider>
+          <>
+            <Outlet />
+            <SideMenu />
+          </>
+        </FlowContextProvider>
       </StorageContextProvider>
     </WalletContextProvider>
   );

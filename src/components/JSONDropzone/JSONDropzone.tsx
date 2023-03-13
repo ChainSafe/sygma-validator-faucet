@@ -11,24 +11,26 @@ import {
 
 interface JSONDropzone {
   JSONReady: (deposit: DepositKeyInterface) => void;
+  fileNameReady: (fileName: string) => void;
 }
 
-export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady }) => {
+export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => {
   //component state
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
 
   //TODO app state - possibly store to context or redux
-  const [depositFileName, setDepositFileName] = useState<string>();
+  const [depositFileName, setDepositFileName] = useState<string>('');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface | undefined>();
 
   useEffect(() => {
     if (depositFileKey?.depositStatus === DepositStatus.READY_FOR_DEPOSIT) {
       JSONReady(depositFileKey);
+      fileNameReady(depositFileName);
     }
-  }, [depositFileKey]);
+  }, [depositFileKey, depositFileName]);
 
   const onFileDrop = (jsonFiles: Array<any>, rejectedFiles: FileRejection[]): void => {
     if (rejectedFiles?.length) {
@@ -46,6 +48,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady }) => {
       setIsFileAccepted(true); // rejected if BLS check fails
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       setDepositFileName(jsonFiles[0].name as string);
+
       const reader = new FileReader();
 
       reader.onload = async (event) => {
@@ -128,14 +131,6 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady }) => {
       reader.readAsText(jsonFiles[0]);
     }
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleSubmit(): void {
-    // if (workflow === WorkflowStep.UPLOAD_VALIDATOR_FILE) {
-    //   dispatchWorkflowUpdate(WorkflowStep.CONNECT_WALLET);
-    // }
-    // TODO - app state, when json is verified goto next step connect wallet
-  }
 
   const {
     acceptedFiles, // all JSON files will pass this check (including BLS failures

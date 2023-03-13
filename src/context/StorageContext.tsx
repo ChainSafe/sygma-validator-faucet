@@ -31,7 +31,6 @@ export function StorageContextProvider({ children }: PropsWithChildren): JSX.Ele
 
   const load = (): void => {
     const storage = sessionStorage.getItem(STORAGE_KEY);
-    console.log('storage', storage);
     if (storage === null) return;
     setData(JSON.parse(storage) as Data);
   };
