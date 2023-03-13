@@ -1,6 +1,6 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { App } from '../App';
-import { Root } from './root';
+import { ConnectWallet, Root, Summary, Transactions, Upload } from './root';
 import ErrorPage from './ErrorPage';
 
 export const router = createBrowserRouter([
@@ -10,20 +10,27 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/',
         element: <Root />,
         children: [
           {
-            path: '/',
-            element: <div>A</div>,
+            index: true,
+            element: <Navigate to="/upload" replace={true} />,
           },
           {
-            path: '/b',
-            element: <div>B</div>,
+            path: '/upload',
+            element: <Upload />,
           },
           {
-            path: '/c',
-            element: <div>C</div>,
+            path: '/connect',
+            element: <ConnectWallet />,
+          },
+          {
+            path: '/summary',
+            element: <Summary />,
+          },
+          {
+            path: '/transactions',
+            element: <Transactions />,
           },
         ],
       },
