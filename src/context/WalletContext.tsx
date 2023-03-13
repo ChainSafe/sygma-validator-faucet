@@ -1,23 +1,23 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import Web3Modal from 'web3modal';
-import WalletConnect from '@walletconnect/web3-provider';
+// import WalletConnect from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import { EIP1193Provider } from 'web3-types/lib/web3_base_provider';
 import { getNetwork } from '../utils/network';
 
 const web3Modal = new Web3Modal({
-  network: 'goerli',
-  theme: 'light',
-  cacheProvider: false,
-  providerOptions: {
-    walletconnect: {
-      package: WalletConnect,
-      options: {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        infuraId: import.meta.env.REACT_APP_INFURA_PROJECT_ID,
-      },
-    },
-  },
+  // network: 'goerli',
+  // theme: 'light',
+  // cacheProvider: false,
+  // providerOptions: {
+  //   walletconnect: {
+  //     package: WalletConnect,
+  //     options: {
+  //       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //       infuraId: import.meta.env.REACT_APP_INFURA_PROJECT_ID,
+  //     },
+  //   },
+  // },
 });
 
 interface WalletContextInterface {
