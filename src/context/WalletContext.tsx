@@ -103,8 +103,7 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
         return true;
       }
     }
-
-    return true;
+    return false;
   };
 
   return (

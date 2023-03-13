@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { JSONDropzone } from '../../components/JSONDropzone';
 import { Button } from '../../components/Button';
@@ -9,14 +9,18 @@ import { FlowActionTypes, FlowContext } from '../../context/FlowContext';
 
 export function Upload(): JSX.Element {
   const navigate = useNavigate();
-  const [{ depositJSON }, dispatch] = useContext(FlowContext);
+  const [, dispatch] = useContext(FlowContext);
+
+  const [depositJSON, setDepositJSON] = useState<DepositKeyInterface | null>(null);
 
   const handleContinueClick = (): void => {
     navigate('/connect');
   };
 
-  const dispatchJSON = (JSON: DepositKeyInterface): void =>
+  const dispatchJSON = (JSON: DepositKeyInterface): void => {
+    setDepositJSON(JSON);
     dispatch({ type: FlowActionTypes.SET_DEPOSIT_JSON, payload: JSON });
+  };
 
   const dispatchFileName = (fileName: string): void =>
     dispatch({ type: FlowActionTypes.SET_FILE_NAME, payload: fileName });

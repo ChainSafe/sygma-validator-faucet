@@ -1,18 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import Contract from 'web3-eth-contract';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
 import { DemoAbi as Abi } from '../../abi';
+import { Networks, getNetwork } from '../../utils/network';
 
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
+  const [network, setNetwork] = useState<Networks | null>(null);
+  const [errorMsg, seteErrorMsg] = useState<string>();
 
   // mocks
   const value = '{value}';
   const currency = '{currency}';
-  const network = '{network.name}';
 
   const navigate = useNavigate();
   const handleBridgeClick = (): void => {
@@ -31,18 +33,30 @@ export function Summary(): JSX.Element {
     wallet.disconnect();
   };
 
-  useEffect(() => {
-    void wallet.ensureNetwork('0x507');
-  }, [wallet]);
+  const handleChooseNetwork = async (network: Networks): Promise<void> => {
+    const isSwitched = await wallet.ensureNetwork(network);
+    if (isSwitched) setNetwork(network);
+    else seteErrorMsg('To ensure selected network accept network switch prompt.');
+  };
 
   return (
     <>
       <Heading>Step 3: Summary</Heading>
+      Chose network:
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}>
+        MOONBASE
+      </Button>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}>
+        MUMBAI
+      </Button>
+      {errorMsg && <p>{errorMsg}</p>}
       <div>
         You’re about to launch a validator on Goerli with {value} {currency} from{' '}
-        {network}. Is that correct?
+        {network && getNetwork(network).chainName}. Is that correct?
       </div>
-      <Button onClick={handleBridgeClick}>Bridge Funds</Button>
+      {network && <Button onClick={handleBridgeClick}>Bridge Funds</Button>}
       <Button onClick={handleBackClick}>Back</Button>
     </>
   );

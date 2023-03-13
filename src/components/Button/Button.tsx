@@ -7,6 +7,6 @@ interface Props {
 
   disabled?: boolean;
 }
-export function Button({ children, onClick, type = 'primary' }: Props): JSX.Element {
+export function Button({ children, onClick }: Props): JSX.Element {
   return <button onClick={onClick}>{children}</button>;
 }

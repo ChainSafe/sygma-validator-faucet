@@ -42,3 +42,8 @@ export function getNetwork(chainId: string): Network {
       throw new Error(`ChainId: ${chainId} dose not exist on list!`);
   }
 }
+
+export enum Networks {
+  MOONBASE = '0x507',
+  MUMBAI = '0x13881',
+}
