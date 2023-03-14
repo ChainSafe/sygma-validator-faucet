@@ -1,8 +1,7 @@
-import { FC, SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { GENESIS_FORK_VERSION, GOERLI_CONTRACT_ADDRESS } from '../../utils/envVars';
+import { GENESIS_FORK_VERSION, DEPOSIT_ADAPTER_TARGET } from '../../utils/envVars';
 import {
-  BeaconChainStatus,
   DepositKeyInterface,
   DepositStatus,
   TransactionStatus,
@@ -10,23 +9,28 @@ import {
   validateDepositKey,
 } from './validation';
 
-export const JSONDropzone: FC = () => {
+interface JSONDropzone {
+  JSONReady: (deposit: DepositKeyInterface) => void;
+  fileNameReady: (fileName: string) => void;
+}
+
+export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => {
   //component state
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
 
   //TODO app state - possibly store to context or redux
-  const [depositFileName, setDepositFileName] = useState<string>();
+  const [depositFileName, setDepositFileName] = useState<string>('');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface[]>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [depositStatus, setDepositStatus] = useState<{
-    pubkey: string;
-    depositStatus: DepositStatus;
-  }>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [beaconChainAPIStatus, setBeaconChainAPIStatus] = useState<BeaconChainStatus>();
+  const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface | undefined>();
+
+  useEffect(() => {
+    if (depositFileKey?.depositStatus === DepositStatus.READY_FOR_DEPOSIT) {
+      JSONReady(depositFileKey);
+      fileNameReady(depositFileName);
+    }
+  }, [depositFileKey, depositFileName]);
 
   const onFileDrop = (jsonFiles: Array<any>, rejectedFiles: FileRejection[]): void => {
     if (rejectedFiles?.length) {
@@ -44,6 +48,7 @@ export const JSONDropzone: FC = () => {
       setIsFileAccepted(true); // rejected if BLS check fails
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       setDepositFileName(jsonFiles[0].name as string);
+
       const reader = new FileReader();
 
       reader.onload = async (event) => {
@@ -55,14 +60,11 @@ export const JSONDropzone: FC = () => {
             );
             // perform BLS check
             if (validateDepositKey(fileData)) {
-              // add valid files to redux
-              setDepositFileKey(
-                fileData.map((file: DepositKeyInterface) => ({
-                  ...file,
-                  transactionStatus: TransactionStatus.READY, // initialize each file with ready state for transaction
-                  depositStatus: DepositStatus.VERIFYING, // assign to verifying status until the pubkey is checked via beaconscan
-                })),
-              );
+              setDepositFileKey({
+                ...fileData[0],
+                transactionStatus: TransactionStatus.READY,
+                depositStatus: DepositStatus.VERIFYING,
+              });
 
               // perform double deposit check
               try {
@@ -70,36 +72,35 @@ export const JSONDropzone: FC = () => {
                 const existingDepositPubkeys = existingDeposits.data.flatMap((x) =>
                   x.publickey.substring(2),
                 );
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
-                fileData.forEach(async (file) => {
-                  if (existingDepositPubkeys.includes(file.pubkey)) {
-                    setDepositStatus({
-                      pubkey: file.pubkey,
-                      depositStatus: DepositStatus.ALREADY_DEPOSITED,
-                    });
-                  } else {
-                    setDepositStatus({
-                      pubkey: file.pubkey,
+                if (existingDepositPubkeys.includes(fileData[0].pubkey)) {
+                  setDepositFileKey({
+                    ...fileData[0],
+                    transactionStatus: TransactionStatus.READY,
+                    depositStatus: DepositStatus.ALREADY_DEPOSITED,
+                  });
+                } else {
+                  //Check of withdrawal credentials match goerli contract address
+                  if (
+                    `0x${fileData[0].withdrawal_credentials.substring(
+                      24,
+                    )}`.toLowerCase() === DEPOSIT_ADAPTER_TARGET.toLowerCase()
+                  ) {
+                    setDepositFileKey({
+                      ...fileData[0],
+                      transactionStatus: TransactionStatus.READY,
                       depositStatus: DepositStatus.READY_FOR_DEPOSIT,
                     });
+                  } else {
+                    handleWithdrawalAddressNotMatching();
                   }
-                });
+                }
               } catch (error) {
-                setBeaconChainAPIStatus(BeaconChainStatus.DOWN);
-              }
-
-              //Check of withdrawal credentials match goerli contract address
-              console.log(fileData[0].withdrawal_credentials.substring(24));
-              if (
-                `0x${fileData[0].withdrawal_credentials.substring(24)}` !==
-                GOERLI_CONTRACT_ADDRESS
-              ) {
-                handleWithdrawalAddressNotMatching();
+                handleSevereError();
               }
             } else {
               // file is JSON but did not pass BLS, so leave it "staged" but not "accepted"
               setIsFileAccepted(false);
-              setDepositFileKey([]);
+              setDepositFileKey(undefined);
               flushDropzoneCache();
 
               // there are a couple special cases that can occur
@@ -121,7 +122,7 @@ export const JSONDropzone: FC = () => {
             console.log(e);
             setIsFileAccepted(false);
             handleSevereError();
-            setDepositFileKey([]);
+            setDepositFileKey(undefined);
             flushDropzoneCache();
           }
         }
@@ -130,14 +131,6 @@ export const JSONDropzone: FC = () => {
       reader.readAsText(jsonFiles[0]);
     }
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleSubmit(): void {
-    // if (workflow === WorkflowStep.UPLOAD_VALIDATOR_FILE) {
-    //   dispatchWorkflowUpdate(WorkflowStep.CONNECT_WALLET);
-    // }
-    // TODO - app state, when json is verified goto next step connect wallet
-  }
 
   const {
     acceptedFiles, // all JSON files will pass this check (including BLS failures
@@ -165,7 +158,7 @@ export const JSONDropzone: FC = () => {
     (e: SyntheticEvent) => {
       e.preventDefault();
       setDepositFileName('');
-      setDepositFileKey([]);
+      setDepositFileKey(undefined);
       setFileError(null);
       setIsFileStaged(false);
       setIsFileAccepted(false);

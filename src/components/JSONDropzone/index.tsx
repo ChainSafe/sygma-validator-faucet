@@ -1,0 +1,1 @@
+export { JSONDropzone } from './JSONDropzone';
