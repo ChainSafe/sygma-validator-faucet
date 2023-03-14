@@ -4,32 +4,69 @@ import { useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
-import { DemoAbi as Abi } from '../../abi';
 import { Networks, getNetwork } from '../../utils/network';
+import { DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN } from '../../contracts';
+import { DepositDataJSON } from '../../components/JSONDropzone/validation';
+import { useStorage } from '../../context/StorageContext';
 
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
   const [network, setNetwork] = useState<Networks | null>(null);
   const [errorMsg, seteErrorMsg] = useState<string>();
 
+  const storage = useStorage();
+
   // mocks
   const value = '{value}';
   const currency = '{currency}';
 
   const navigate = useNavigate();
-  const handleBridgeClick = (): void => {
-    console.log('do magic on click');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const contract: Contract<typeof Abi> = new wallet.web3.eth.Contract(
-      Abi,
-      '0x9d15e18Aed0568FB829b857BA1acd1ac8fd68474',
-    );
-    console.log(contract);
 
-    navigate('/transactions');
+  //TODO - improve code
+  const handleBridgeClick = async (): Promise<void> => {
+    console.log(!network || !storage.data.json);
+    if (!network || !storage.data.json) return;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const accounts = await wallet.web3.eth.getAccounts();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const depositAdapterContract: Contract<typeof DepositAdapterABI> =
+      new wallet.web3.eth.Contract(DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN, {
+        from: accounts[0],
+        provider: wallet.web3.provider,
+      });
+    const depositDataJSON: DepositDataJSON = storage.data.json;
+
+    const depositContractCalldata = wallet.web3.eth.abi.encodeParameters(
+      ['bytes', 'bytes', 'bytes', 'bytes32'],
+      [
+        `0x${depositDataJSON.pubkey}`,
+        `0x${depositDataJSON.withdrawal_credentials}`,
+        `0x${depositDataJSON.signature}`,
+        `0x${depositDataJSON.deposit_data_root}`,
+      ],
+    );
+    try {
+      const depositMethod = depositAdapterContract.methods.deposit(
+        1,
+        depositContractCalldata,
+        '0x',
+      );
+
+      const gas = await depositMethod.estimateGas({ value: '3201000000000000000' });
+      const result = await depositMethod.send({
+        from: accounts[0],
+        gas: gas.toString(),
+        value: '3201000000000000000',
+      });
+      console.log(result);
+      navigate('/transactions');
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   };
   const handleBackClick = (): void => {
-    console.log('do magic on click');
     wallet.disconnect();
   };
 
@@ -56,6 +93,7 @@ export function Summary(): JSX.Element {
         You’re about to launch a validator on Goerli with {value} {currency} from{' '}
         {network && getNetwork(network).chainName}. Is that correct?
       </div>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       {network && <Button onClick={handleBridgeClick}>Bridge Funds</Button>}
       <Button onClick={handleBackClick}>Back</Button>
     </>

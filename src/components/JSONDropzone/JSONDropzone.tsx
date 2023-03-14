@@ -1,6 +1,7 @@
 import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { GENESIS_FORK_VERSION, DEPOSIT_ADAPTER_TARGET } from '../../utils/envVars';
+import { GENESIS_FORK_VERSION } from '../../utils/envVars';
+import { DEPOSIT_ADAPTER_TARGET } from '../../contracts';
 import {
   DepositKeyInterface,
   DepositStatus,

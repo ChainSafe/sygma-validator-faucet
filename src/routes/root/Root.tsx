@@ -19,13 +19,20 @@ export function Root(): JSX.Element {
 
   if (!storage.isReady) return <Spinner />;
 
+  if (
+    ['/connect', '/summary', '/transactions'].some(
+      (path) => location.pathname === path,
+    ) &&
+    !storage.data.json
+  )
+    return <Navigate to="/upload" replace={true} />;
+
   // Guard's
   if (
     ['/summary', '/transactions'].some((path) => location.pathname === path) &&
     !wallet.web3
   )
     return <Navigate to="/connect" replace={true} />;
-  // TODO: add guard's for missing JSON data
 
   return (
     <>

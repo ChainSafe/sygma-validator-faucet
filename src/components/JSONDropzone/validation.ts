@@ -43,18 +43,21 @@ export interface BeaconchainDepositInterface {
   status: string;
 }
 
-export interface DepositKeyInterface {
-  pubkey: string;
-  withdrawal_credentials: string;
+export interface DepositDataJSON {
   amount: number;
-  signature: string;
-  deposit_message_root: string;
-  deposit_data_root: string;
-  fork_version: string;
   deposit_cli_version: string;
+  deposit_data_root: string;
+  deposit_message_root: string;
+  fork_version: string;
+  network_name: string;
+  pubkey: string;
+  signature: string;
+  withdrawal_credentials: string;
+}
+export interface DepositKeyInterface extends DepositDataJSON {
   transactionStatus: TransactionStatus;
-  txHash?: string;
   depositStatus: DepositStatus;
+  txHash?: string;
 }
 
 export enum TransactionStatus {
