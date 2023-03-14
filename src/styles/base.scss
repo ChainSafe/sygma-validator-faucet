@@ -1,13 +1,6 @@
 @use './colors.scss';
 @use './fonts.scss';
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: $blue-700;
-}
-
 :root {
   font-size: 16px;
   font-family: $font-family-main;
@@ -16,4 +9,20 @@
   background-color: $blue-700;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+ul, menu {
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style-type: none;
+  }
 }
