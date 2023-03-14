@@ -26,7 +26,7 @@ export function SideMenu(): JSX.Element {
 
 const SidebarWrapper = styled.div`
   padding: 13px 0 0 15px;
-  background: var(--blue-900);
+  background: #0f101b;
 `;
 
 const ProjectIconWrapper = styled.a`
@@ -39,10 +39,11 @@ const ProjectIconWrapper = styled.a`
 const ProjectIcon = styled.img`
   max-width: 59px;
   max-height: 59px;
+  width: 100%;
 `;
 
 const ProjectName = styled.div`
-  color: var(--white);
+  color: white;
   align-self: center;
   word-spacing: 100vw;
   margin-left: 2px;
@@ -55,9 +56,9 @@ const MenuItem = styled.a`
   cursor: pointer;
   padding: 8px 16px;
   max-width: 120px;
-  color: var(--grey-400);
+  color: #959eb9;
   display: flex;
-  background: var(--blue-700);
+  background: #141925;
   border-radius: 12px;
   margin-bottom: 8px;
 

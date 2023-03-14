@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
 import { SideMenu } from './components/SideMenu';
 import { WalletContextProvider } from './context/WalletContext';
 import { StorageContextProvider } from './context/StorageContext';
@@ -11,10 +11,8 @@ export function App(): JSX.Element {
       <StorageContextProvider>
         <FlowContextProvider>
           <Layout>
+            <Outlet />
             <SideMenu />
-            <div>
-              <Outlet />
-            </div>
           </Layout>
         </FlowContextProvider>
       </StorageContextProvider>
@@ -24,7 +22,8 @@ export function App(): JSX.Element {
 
 const Layout = styled.div`
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  gap: var(--s1);
   height: 100vh;
 
   & > :first-child {
