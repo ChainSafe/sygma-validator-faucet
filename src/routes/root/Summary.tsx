@@ -20,6 +20,7 @@ export function Summary(): JSX.Element {
   const handleBridgeClick = (): void => {
     console.log('do magic on click');
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // @ts-ignore
     const contract: Contract<typeof Abi> = new wallet.web3.eth.Contract(
       Abi,
       '0x9d15e18Aed0568FB829b857BA1acd1ac8fd68474',
@@ -43,12 +44,17 @@ export function Summary(): JSX.Element {
     <>
       <Heading>Step 3: Summary</Heading>
       Chose network:
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}>
+      {/* eslint-disable @typescript-eslint/no-misused-promises */}
+      <Button
+        onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}
+        variant={'primary'}
+      >
         MOONBASE
       </Button>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}>
+      <Button
+        variant={'primary'}
+        onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}
+      >
         MUMBAI
       </Button>
       {errorMsg && <p>{errorMsg}</p>}
@@ -56,8 +62,14 @@ export function Summary(): JSX.Element {
         You’re about to launch a validator on Goerli with {value} {currency} from{' '}
         {network && getNetwork(network).chainName}. Is that correct?
       </div>
-      {network && <Button onClick={handleBridgeClick}>Bridge Funds</Button>}
-      <Button onClick={handleBackClick}>Back</Button>
+      {network && (
+        <Button variant={'primary'} onClick={handleBridgeClick}>
+          Bridge Funds
+        </Button>
+      )}
+      <Button variant={'secondary'} onClick={handleBackClick}>
+        Back
+      </Button>
     </>
   );
 }
