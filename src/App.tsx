@@ -21,8 +21,7 @@ export function App(): JSX.Element {
 
 const Layout = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--s1);
+  flex-wrap: nowrap;
   height: 100vh;
 
   & > :first-child {

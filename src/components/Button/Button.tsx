@@ -7,13 +7,7 @@ interface Props {
   variant: 'primary' | 'secondary';
   disabled?: boolean;
 }
-
-export function Button({
-  children,
-  disabled,
-  variant = 'primary',
-  onClick,
-}: Props): JSX.Element {
+export function Button({ children, disabled, variant, onClick }: Props): JSX.Element {
   return (
     <ButtonStyled onClick={onClick} variant={variant} disabled={disabled} type={'button'}>
       {children}
@@ -32,7 +26,7 @@ const ButtonStyled = styled.button<Props>`
   font-family: var(--font-family-main);
   outline: none;
   border: none;
-  color: ${({ variant }) => textColors[variant]}'
+  color: ${({ variant }) => textColors[variant]};
   background-color: ${({ variant }) => backgroundColors[variant]};
 
   &:active {
