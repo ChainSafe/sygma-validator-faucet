@@ -12,7 +12,9 @@ export function App(): JSX.Element {
         <FlowContextProvider>
           <Layout>
             <SideMenu />
-            <Outlet />
+            <div>
+              <Outlet />
+            </div>
           </Layout>
         </FlowContextProvider>
       </StorageContextProvider>
