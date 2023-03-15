@@ -1,23 +1,22 @@
-import {Outlet} from 'react-router-dom';
 import styled from 'styled-components';
-import {SideMenu} from './components/SideMenu';
-import {WalletContextProvider} from './context/WalletContext';
-import {StorageContextProvider} from './context/StorageContext';
-import {FlowContextProvider} from './context/FlowContext';
+import { SideMenu } from './components/SideMenu';
+import { WalletContextProvider } from './context/WalletContext';
+import { StorageContextProvider } from './context/StorageContext';
+import { FlowContextProvider } from './context/FlowContext';
 
 export function App(): JSX.Element {
-    return (
-        <WalletContextProvider>
-            <StorageContextProvider>
-                <FlowContextProvider>
-                    <Layout>
-                        <Outlet/>
-                        <SideMenu/>
-                    </Layout>
-                </FlowContextProvider>
-            </StorageContextProvider>
-        </WalletContextProvider>
-    );
+  return (
+    <WalletContextProvider>
+      <StorageContextProvider>
+        <FlowContextProvider>
+          <Layout>
+            <SideMenu />
+            <div>Main content</div>
+          </Layout>
+        </FlowContextProvider>
+      </StorageContextProvider>
+    </WalletContextProvider>
+  );
 }
 
 const Layout = styled.div`
