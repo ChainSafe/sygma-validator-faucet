@@ -1,4 +1,3 @@
-import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { SideMenu } from './components/SideMenu';
 import { WalletContextProvider } from './context/WalletContext';
@@ -11,8 +10,8 @@ export function App(): JSX.Element {
       <StorageContextProvider>
         <FlowContextProvider>
           <Layout>
-            <Outlet />
             <SideMenu />
+            <div>Main content</div>
           </Layout>
         </FlowContextProvider>
       </StorageContextProvider>
