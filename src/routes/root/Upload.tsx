@@ -33,7 +33,11 @@ export function Upload(): JSX.Element {
         here.
       </div>
       <JSONDropzone JSONReady={dispatchJSON} fileNameReady={dispatchFileName} />
-      {storage.data.json && <Button onClick={handleContinueClick}>Continue</Button>}
+      {storage.data.json && (
+        <Button variant={'primary'} onClick={handleContinueClick}>
+          Continue
+        </Button>
+      )}
     </>
   );
 }

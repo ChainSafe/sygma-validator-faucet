@@ -44,6 +44,7 @@ export function Summary(): JSX.Element {
     const accounts = await wallet.web3.eth.getAccounts();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // @ts-ignore
     const depositAdapterContract: Contract<typeof DepositAdapterABI> =
       new wallet.web3.eth.Contract(DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN, {
         from: accounts[0],
@@ -52,6 +53,7 @@ export function Summary(): JSX.Element {
     const depositDataJSON: DepositDataJSON = storage.data.json;
 
     const depositContractCalldata = wallet.web3.eth.abi.encodeParameters(
+      // @ts-ignore
       ['bytes', 'bytes', 'bytes', 'bytes32'],
       [
         `0x${depositDataJSON.pubkey}`,
@@ -72,6 +74,7 @@ export function Summary(): JSX.Element {
 
     try {
       //read deposit fee from contract
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const depositFee = await depositAdapterContract.methods._depositFee().call();
       const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee);
 
@@ -114,12 +117,18 @@ export function Summary(): JSX.Element {
     <>
       <Heading>Step 3: Summary</Heading>
       Chose network:
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}>
+      <Button
+        variant={'primary'}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}
+      >
         MOONBASE {selectedNetwork === Networks.MOONBASE && 'is selected'}
       </Button>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}>
+      <Button
+        variant={'primary'}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}
+      >
         MUMBAI {selectedNetwork === Networks.MUMBAI && 'is selected'}
       </Button>
       {errorMsg && <p>{errorMsg}</p>}
@@ -127,9 +136,15 @@ export function Summary(): JSX.Element {
         You’re about to launch a validator on Goerli with {value} {currency} from{' '}
         {selectedNetwork && getNetwork(selectedNetwork).chainName}. Is that correct?
       </div>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      {selectedNetwork && <Button onClick={handleBridgeClick}>Bridge Funds</Button>}
-      <Button onClick={handleBackClick}>Back</Button>
+      {selectedNetwork && (
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        <Button variant={'primary'} onClick={handleBridgeClick}>
+          Bridge Funds
+        </Button>
+      )}
+      <Button variant={'primary'} onClick={handleBackClick}>
+        Back
+      </Button>
     </>
   );
 }
