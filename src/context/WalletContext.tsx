@@ -95,7 +95,7 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
 
       // TODO remove ts ignore;
       // @ts-ignore
-      if (switchError.code === 4902) {
+      if (switchError.code === 4902 || switchError.code === 4001) {
         await provider.request({
           method: 'wallet_addEthereumChain',
           params: [getNetwork(network)],
