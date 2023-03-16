@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), nodePolyfills(), topLevelAwait(), svgr()],
   build: {
     commonjsOptions: {
-      transformMixedEsModules: true
-    }
-  }
+      transformMixedEsModules: true,
+    },
+  },
 });

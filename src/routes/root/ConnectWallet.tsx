@@ -15,7 +15,9 @@ export function ConnectWallet(): JSX.Element {
     return (
       <>
         <Heading>Step 2: Connect Wallet</Heading>
-        <Button onClick={handleConnectClick}>Connect</Button>
+        <Button variant={'primary'} onClick={handleConnectClick}>
+          Connect
+        </Button>
       </>
     );
 
