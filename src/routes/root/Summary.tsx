@@ -30,6 +30,7 @@ export function Summary(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const accounts = await wallet.web3.eth.getAccounts();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // @ts-ignore
     const depositAdapterContract: Contract<typeof DepositAdapterABI> =
       new wallet.web3.eth.Contract(DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN, {
         from: accounts[0],
@@ -38,6 +39,7 @@ export function Summary(): JSX.Element {
     const depositDataJSON: DepositDataJSON = storage.data.json;
 
     const depositContractCalldata = wallet.web3.eth.abi.encodeParameters(
+      // @ts-ignore
       ['bytes', 'bytes', 'bytes', 'bytes32'],
       [
         `0x${depositDataJSON.pubkey}`,
@@ -80,12 +82,17 @@ export function Summary(): JSX.Element {
     <>
       <Heading>Step 3: Summary</Heading>
       Chose network:
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}>
+      {/* eslint-disable @typescript-eslint/no-misused-promises */}
+      <Button
+        onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}
+        variant={'primary'}
+      >
         MOONBASE
       </Button>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <Button onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}>
+      <Button
+        variant={'primary'}
+        onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}
+      >
         MUMBAI
       </Button>
       {errorMsg && <p>{errorMsg}</p>}
@@ -94,8 +101,14 @@ export function Summary(): JSX.Element {
         {network && getNetwork(network).chainName}. Is that correct?
       </div>
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      {network && <Button onClick={handleBridgeClick}>Bridge Funds</Button>}
-      <Button onClick={handleBackClick}>Back</Button>
+      {network && (
+        <Button variant={'primary'} onClick={handleBridgeClick}>
+          Bridge Funds
+        </Button>
+      )}
+      <Button variant={'primary'} onClick={handleBackClick}>
+        Back
+      </Button>
     </>
   );
 }
