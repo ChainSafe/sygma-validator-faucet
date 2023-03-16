@@ -5,7 +5,7 @@ import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
 import { DemoAbi as Abi } from '../../abi';
-import { Networks, getNetwork } from '../../utils/network';
+import { getNetwork, Networks } from '../../utils/network';
 
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();

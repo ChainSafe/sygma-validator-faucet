@@ -15,6 +15,7 @@ export function App(): JSX.Element {
             <div>
               <Outlet />
             </div>
+            <RightColumn />
           </Layout>
         </FlowContextProvider>
       </StorageContextProvider>
@@ -33,9 +34,19 @@ const Layout = styled.div`
     width: 100%;
   }
 
-  & > :last-child {
+  & > :nth-child(2) {
     flex-basis: 0;
     flex-grow: 99999;
     min-inline-size: 50%;
   }
+
+  & > :last-child {
+    flex-grow: 1;
+    max-width: 212px;
+    width: 100%;
+  }
+`;
+
+const RightColumn = styled.div`
+  background: var(--blue-900);
 `;
