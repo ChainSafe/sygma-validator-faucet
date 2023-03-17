@@ -10,7 +10,7 @@ import { getNetwork, Networks } from '../../utils/network';
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
   const [network, setNetwork] = useState<Networks | null>(null);
-  const [errorMsg, seteErrorMsg] = useState<string>();
+  const [errorMsg, setErrorMsg] = useState<string>();
 
   // mocks
   const value = '{value}';
@@ -37,7 +37,7 @@ export function Summary(): JSX.Element {
   const handleChooseNetwork = async (network: Networks): Promise<void> => {
     const isSwitched = await wallet.ensureNetwork(network);
     if (isSwitched) setNetwork(network);
-    else seteErrorMsg('To ensure selected network accept network switch prompt.');
+    else setErrorMsg('To ensure selected network accept network switch prompt.');
   };
 
   return (

@@ -4,6 +4,7 @@ import { SideMenu } from './components/SideMenu';
 import { WalletContextProvider } from './context/WalletContext';
 import { StorageContextProvider } from './context/StorageContext';
 import { FlowContextProvider } from './context/FlowContext';
+import breakpoints from './styles/breakpoints';
 
 export function App(): JSX.Element {
   return (
@@ -12,9 +13,9 @@ export function App(): JSX.Element {
         <FlowContextProvider>
           <Layout>
             <SideMenu />
-            <main>
+            <Main>
               <Outlet />
-            </main>
+            </Main>
             <RightColumn />
           </Layout>
         </FlowContextProvider>
@@ -44,6 +45,15 @@ const Layout = styled.div`
     flex-grow: 1;
     max-width: 212px;
     width: 100%;
+  }
+`;
+
+const Main = styled.main`
+  margin: 0 20px;
+
+  @media (min-width: ${breakpoints.screenMd}) {
+    margin: 0 5%;
+    color: var(--screen-md);
   }
 `;
 

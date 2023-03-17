@@ -25,13 +25,6 @@ const GlobalStyles = createGlobalStyle`
     --font-inter: Inter;
     --font-family-main: var(--font-inter), system-ui, Avenir, Helvetica, Arial, sans-serif;
     
-    // Breakpoints variables
-    --screen-xs: 320px;
-    --screen-sm: 576px;
-    --screen-md: 1024px;
-    --screen-lg: 1366px;
-    --screen-xl: 1920px;
-    
     // Global styles
     font-size: 16px;
     font-family: var(--font-family-main);
