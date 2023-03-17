@@ -15,7 +15,7 @@ export function Button({
   onClick,
 }: Props): JSX.Element {
   return (
-    <ButtonStyled onClick={onClick} variant={variant} disabled={disabled} type={'button'}>
+    <ButtonStyled onClick={onClick} variant={variant} disabled={disabled} type="button">
       {children}
     </ButtonStyled>
   );
@@ -32,7 +32,7 @@ const ButtonStyled = styled.button<Props>`
   font-family: var(--font-family-main);
   outline: none;
   border: none;
-  color: ${({ variant }) => textColors[variant]}'
+  color: ${({ variant }) => textColors[variant]};
   background-color: ${({ variant }) => backgroundColors[variant]};
 
   &:active {
@@ -43,6 +43,7 @@ const ButtonStyled = styled.button<Props>`
   &:disabled {
     color: var(--btn-color-disabled);
     background-color: var(--grey-400);
+    cursor: not-allowed;
   }
 `;
 
