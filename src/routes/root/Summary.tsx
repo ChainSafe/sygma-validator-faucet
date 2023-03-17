@@ -42,7 +42,6 @@ export function Summary(): JSX.Element {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const accounts = await wallet.web3.eth.getAccounts();
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     // @ts-ignore
     const depositAdapterContract: Contract<typeof DepositAdapterABI> =

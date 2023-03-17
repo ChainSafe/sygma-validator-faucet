@@ -1,7 +1,8 @@
 import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
-import { GENESIS_FORK_VERSION } from '../../utils/envVars';
+import styled from 'styled-components';
 import { DEPOSIT_ADAPTER_TARGET } from '../../contracts';
+import { GENESIS_FORK_VERSION } from '../../utils/envVars';
 import {
   DepositKeyInterface,
   DepositStatus,
@@ -229,7 +230,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   ]);
 
   return (
-    <div
+    <DropzoneWrapper
       //TODO - style
       // isFileStaged={isFileStaged}
       // isFileAccepted={isFileAccepted && !fileError}
@@ -246,7 +247,25 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
             isFileAccepted={isFileAccepted && !fileError}
           /> */}
 
-      <div>{renderMessage}</div>
-    </div>
+      <DropzoneMessage>{renderMessage}</DropzoneMessage>
+    </DropzoneWrapper>
   );
 };
+
+const DropzoneWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background: var(--blue-500);
+  height: 147px;
+  border-radius: 12px;
+  border-style: dashed;
+  border-color: var(--grey-500);
+  margin: 10px 0 30px 0;
+  cursor: grab;
+`;
+
+const DropzoneMessage = styled.div`
+  color: var(--grey-400);
+`;
