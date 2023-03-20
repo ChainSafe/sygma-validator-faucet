@@ -1,2 +1,2 @@
-export * from './abi';
+export * from './abis';
 export * from './addresses';

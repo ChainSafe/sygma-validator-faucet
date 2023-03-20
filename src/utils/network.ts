@@ -1,5 +1,5 @@
 export interface Network {
-  chainId: string; // A 0x-prefixed hexadecimal string
+  chainId: NetworksChainID; // A 0x-prefixed hexadecimal string
   chainName: string;
   nativeCurrency: {
     name: string;
@@ -9,9 +9,15 @@ export interface Network {
   rpcUrls: string[];
 }
 
+export enum NetworksChainID {
+  GOERLI = '0x5',
+  MOONBASE = '0x507',
+  MUMBAI = '0x13881',
+}
+
 export const networks: Network[] = [
   {
-    chainId: '0x507',
+    chainId: NetworksChainID.MOONBASE,
     chainName: 'Moonbase Alpha',
     nativeCurrency: {
       name: 'Moonbase DEV',
@@ -21,7 +27,7 @@ export const networks: Network[] = [
     rpcUrls: ['https://rpc.api.moonbase.moonbeam.network'],
   },
   {
-    chainId: '0x13881',
+    chainId: NetworksChainID.MUMBAI,
     chainName: 'Mumbai',
     nativeCurrency: {
       name: 'Mumbai DEV',
@@ -43,7 +49,4 @@ export function getNetwork(chainId: string): Network {
   }
 }
 
-export enum Networks {
-  MOONBASE = '0x507',
-  MUMBAI = '0x13881',
-}
+

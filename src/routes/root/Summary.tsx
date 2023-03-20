@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
-import { Networks, getNetwork } from '../../utils/network';
+import { NetworksChainID, getNetwork } from '../../utils/network';
 import { DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN } from '../../contracts';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
@@ -18,7 +18,7 @@ export function Summary(): JSX.Element {
   const storage = useStorage();
   const navigate = useNavigate();
 
-  const [selectedNetwork, setSelectedNetwork] = useState<Networks | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<NetworksChainID | null>(null);
   const [manuallyChaingedNetwork, setManuallyChaingedNetwork] = useState<string | null>(
     null,
   );
@@ -52,7 +52,6 @@ export function Summary(): JSX.Element {
     const depositDataJSON: DepositDataJSON = storage.data.json;
 
     const depositContractCalldata = wallet.web3.eth.abi.encodeParameters(
-      // @ts-ignore
       ['bytes', 'bytes', 'bytes', 'bytes32'],
       [
         `0x${depositDataJSON.pubkey}`,
@@ -95,6 +94,7 @@ export function Summary(): JSX.Element {
         gas: gas.toString(),
         value: value.toString(),
       });
+      
       console.log(result);
       navigate('/transactions');
     } catch (e) {
@@ -106,7 +106,7 @@ export function Summary(): JSX.Element {
     wallet.disconnect();
   };
 
-  const handleChooseNetwork = async (network: Networks): Promise<void> => {
+  const handleChooseNetwork = async (network: NetworksChainID): Promise<void> => {
     const isSwitched = await wallet.ensureNetwork(network);
     if (isSwitched) setSelectedNetwork(network);
     else setErrorMsg('To ensure selected network accept network switch prompt.');
@@ -119,16 +119,16 @@ export function Summary(): JSX.Element {
       <Button
         variant={'primary'}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}
+        onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MOONBASE)}
       >
-        MOONBASE {selectedNetwork === Networks.MOONBASE && 'is selected'}
+        MOONBASE {selectedNetwork === NetworksChainID.MOONBASE && 'is selected'}
       </Button>
       <Button
         variant={'primary'}
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}
+        onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MUMBAI)}
       >
-        MUMBAI {selectedNetwork === Networks.MUMBAI && 'is selected'}
+        MUMBAI {selectedNetwork === NetworksChainID.MUMBAI && 'is selected'}
       </Button>
       {errorMsg && <p>{errorMsg}</p>}
       <div>

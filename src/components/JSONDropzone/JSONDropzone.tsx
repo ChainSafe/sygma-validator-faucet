@@ -74,12 +74,16 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                 const existingDepositPubkeys = existingDeposits.data.flatMap((x) =>
                   x.publickey.substring(2),
                 );
-                if (existingDepositPubkeys.includes(fileData[0].pubkey)) {
+                if (
+                  // existingDepositPubkeys.includes(fileData[0].pubkey)
+                  false
+                  ) {
                   setDepositFileKey({
                     ...fileData[0],
                     transactionStatus: TransactionStatus.READY,
                     depositStatus: DepositStatus.ALREADY_DEPOSITED,
                   });
+                  handlePubKeyAlreadyDeposited()
                 } else {
                   //Check of withdrawal credentials match goerli contract address
                   if (
@@ -197,6 +201,12 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const handleWithdrawalAddressNotMatching = (): void => {
     setFileError(<div>Withdrawal address doesn't match goerli contract address</div>);
   };
+
+  const handlePubKeyAlreadyDeposited = (): void => {
+    setFileError(<div>Pubkey already deposited</div>);
+  };
+
+
 
   const renderMessage = useMemo((): JSX.Element => {
     if (isDragReject && !isFileStaged) {
