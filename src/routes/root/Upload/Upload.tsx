@@ -50,8 +50,6 @@ export function Upload(): JSX.Element {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 72px auto 0 auto;
-  max-width: 86%;
 
   h1 {
     margin-bottom: 22px;

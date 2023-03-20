@@ -1,16 +1,9 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { Steps } from '../../components/Steps';
-import { Step } from '../../types';
+import React from 'react';
 import { useStorage } from '../../context/StorageContext';
 import { Spinner } from '../../components/Spinner';
 import { useWallet } from '../../context/WalletContext';
-
-const steps: Step[] = [
-  { name: 'Upload Deposit Data', route: '/' },
-  { name: 'Connect Wallet', route: '/connect' },
-  { name: 'Summary', route: '/summary' },
-  { name: 'Transactions', route: '/transactions' },
-];
+import { StepsNavigation } from '../../components/StepsNavigation/StepsNavigation';
 
 export function Root(): JSX.Element {
   const storage = useStorage();
@@ -29,7 +22,7 @@ export function Root(): JSX.Element {
 
   return (
     <>
-      <Steps steps={steps} />
+      <StepsNavigation />
       <Outlet />
     </>
   );
