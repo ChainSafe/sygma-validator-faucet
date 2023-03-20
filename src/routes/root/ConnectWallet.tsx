@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useWallet } from '../../context/WalletContext';
-import styled from 'styled-components';
 
 export function ConnectWallet(): JSX.Element {
   const wallet = useWallet();
