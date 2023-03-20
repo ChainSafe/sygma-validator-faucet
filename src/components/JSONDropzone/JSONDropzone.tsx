@@ -74,10 +74,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                 const existingDepositPubkeys = existingDeposits.data.flatMap((x) =>
                   x.publickey.substring(2),
                 );
-                if (
-                  // existingDepositPubkeys.includes(fileData[0].pubkey)
-                  false
-                  ) {
+                if (existingDepositPubkeys.includes(fileData[0].pubkey)) {
                   setDepositFileKey({
                     ...fileData[0],
                     transactionStatus: TransactionStatus.READY,

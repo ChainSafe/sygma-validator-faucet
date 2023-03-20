@@ -240,6 +240,7 @@ export const getExistingDepositsForPubkeys = async (
   const beaconScanUrl = `${BEACONCHAIN_URL}/api/v1/validator/${pubkeys.join(
     ',',
   )}/deposits`;
+
   const { data: beaconScanCheck } = await axios.get<BeaconchainDepositInterface>(
     beaconScanUrl,
   );

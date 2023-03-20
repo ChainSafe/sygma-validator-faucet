@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Contract from 'web3-eth-contract';
+import Contract, { TransactionReceipt } from 'web3-eth-contract';
 import { useEffect, useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
@@ -89,14 +89,17 @@ export function Summary(): JSX.Element {
       );
 
       const gas = await depositMethod.estimateGas({ value: value.toString() });
-      const result = await depositMethod.send({
+      const result: TransactionReceipt = await depositMethod.send({
         from: accounts[0],
         gas: gas.toString(),
         value: value.toString(),
       });
+      console.log("result")
+      console.log(result)
+      if(result.status === 1n)
+        storage.update({txReceipt: result})
+        navigate('/transactions');
       
-      console.log(result);
-      navigate('/transactions');
     } catch (e) {
       console.log(e);
       throw e;
