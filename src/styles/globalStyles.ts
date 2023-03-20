@@ -73,7 +73,7 @@ const GlobalStyles = createGlobalStyle`
   // Typography styles
   h1 {
     font-family: var(--font-family-main);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 1.5rem;
     color: var(--text-white);
   }
