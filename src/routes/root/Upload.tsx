@@ -1,26 +1,25 @@
 import { useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { JSONDropzone } from '../../components/JSONDropzone';
 import { Button } from '../../components/Button';
-
 import { DepositKeyInterface } from '../../components/JSONDropzone/validation';
 import { FlowActionTypes, FlowContext } from '../../context/FlowContext';
+import { useStorage } from '../../context/StorageContext';
 
 export function Upload(): JSX.Element {
   const navigate = useNavigate();
   const [, dispatch] = useContext(FlowContext);
-
-  const [depositJSON, setDepositJSON] = useState<DepositKeyInterface | null>(null);
+  const storage = useStorage();
 
   const handleContinueClick = (): void => {
     navigate('/connect');
   };
 
-  const dispatchJSON = (JSON: DepositKeyInterface): void => {
-    setDepositJSON(JSON);
-    dispatch({ type: FlowActionTypes.SET_DEPOSIT_JSON, payload: JSON });
+  const dispatchJSON = (json: DepositKeyInterface): void => {
+    dispatch({ type: FlowActionTypes.SET_DEPOSIT_JSON, payload: json });
+    storage.update({ json });
   };
 
   const dispatchFileName = (fileName: string): void =>
@@ -40,7 +39,11 @@ export function Upload(): JSX.Element {
         </p>
         <JSONDropzone JSONReady={dispatchJSON} fileNameReady={dispatchFileName} />
       </DropboxSection>
-      <Button variant="secondary" disabled={!depositJSON} onClick={handleContinueClick}>
+      <Button
+        variant="secondary"
+        disabled={!storage.data.json}
+        onClick={handleContinueClick}
+      >
         Continue
       </Button>
     </Wrapper>
