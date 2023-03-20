@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import Contract from 'web3-eth-contract';
 import { useState } from 'react';
+import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
-import { Networks, getNetwork } from '../../utils/network';
-import { DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN } from '../../contracts';
+import { getNetwork, Networks } from '../../utils/network';
+import { DEPOSIT_ADAPTER_ORIGIN, DepositAdapterABI } from '../../contracts';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
 
@@ -133,3 +134,13 @@ export function Summary(): JSX.Element {
     </>
   );
 }
+
+const Header = styled.header`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const AccountInfo = styled.div`
+  background-color: var(--grey-500);
+`;
