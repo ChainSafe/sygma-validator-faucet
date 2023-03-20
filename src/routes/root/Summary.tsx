@@ -125,10 +125,12 @@ export function Summary(): JSX.Element {
           </Button>
         </ButtonWrapper>
         {errorMsg && <p>{errorMsg}</p>}
-        <InfoBox>
-          You’re about to launch a validator on Goerli with {value} {currency} from{' '}
-          {selectedNetwork && getNetwork(selectedNetwork).chainName}. Is that correct?
-        </InfoBox>
+        {selectedNetwork && (
+          <InfoBox>
+            You’re about to launch a validator on Goerli with {value} {currency} from{' '}
+            <b>{getNetwork(selectedNetwork).chainName}</b>. Is that correct?
+          </InfoBox>
+        )}
         <ButtonWrapper>
           {selectedNetwork && (
             <Button variant={'primary'} onClick={handleBridgeClick}>
@@ -145,10 +147,10 @@ export function Summary(): JSX.Element {
 }
 
 const Wrapper = styled.div`
+  margin: 36px auto;
   display: flex;
   flex-direction: column;
   max-width: 356px;
-  margin: 0 auto;
   text-align: center;
 
   button {
