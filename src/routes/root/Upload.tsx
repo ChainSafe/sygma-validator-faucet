@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { Heading } from '../../../components/Heading';
-import { JSONDropzone } from '../../../components/JSONDropzone';
-import { Button } from '../../../components/Button';
+import { Heading } from '../../components/Heading';
+import { JSONDropzone } from '../../components/JSONDropzone';
+import { Button } from '../../components/Button';
 
-import { DepositKeyInterface } from '../../../components/JSONDropzone/validation';
-import { FlowActionTypes, FlowContext } from '../../../context/FlowContext';
+import { DepositKeyInterface } from '../../components/JSONDropzone/validation';
+import { FlowActionTypes, FlowContext } from '../../context/FlowContext';
 
 export function Upload(): JSX.Element {
   const navigate = useNavigate();
