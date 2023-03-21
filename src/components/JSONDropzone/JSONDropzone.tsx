@@ -28,7 +28,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const [depositFileKey, setDepositFileKey] = useState<DepositKeyInterface | undefined>();
 
   useEffect(() => {
-    if (depositFileKey?.depositStatus === DepositStatus.ALREADY_DEPOSITED) {
+    if (depositFileKey?.depositStatus === DepositStatus.READY_FOR_DEPOSIT) {
       JSONReady(depositFileKey);
       fileNameReady(depositFileName);
     }
