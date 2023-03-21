@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "yarn run lint:style && yarn run lint:types",
     "lint:fix": "yarn run lint:fix:style && yarn run lint:fix:code",
