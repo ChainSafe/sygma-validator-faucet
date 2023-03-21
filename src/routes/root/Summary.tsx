@@ -1,13 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import Contract, { TransactionReceipt } from 'web3-eth-contract';
-import { useEffect, useState } from 'react';
+import { TransactionReceipt, Contract } from 'web3';
+import { useState } from 'react';
+import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
 import { NetworksChainID, getNetwork } from '../../utils/network';
 import { DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN } from '../../contracts';
+import AccountInfo from '../../components/AccountInfo/AccountInfo';
+import { InfoBox } from '../../components/lib';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
+import { useBasicFee } from '../../hooks/useBasicFee';
 
 // mocks
 const value = '{value}';
@@ -17,24 +21,11 @@ export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
   const storage = useStorage();
   const navigate = useNavigate();
+  const [basicFee] = useBasicFee();
 
   const [selectedNetwork, setSelectedNetwork] = useState<NetworksChainID | null>(null);
-  const [manuallyChaingedNetwork, setManuallyChaingedNetwork] = useState<string | null>(
-    null,
-  );
 
   const [errorMsg, setErrorMsg] = useState<string>();
-
-  useEffect(() => {
-    if (wallet.web3.currentProvider) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const provider = wallet.web3.currentProvider as any;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      provider.on('chainChanged', (chainId: number) => {
-        setManuallyChaingedNetwork(chainId.toString());
-      });
-    }
-  }, [wallet.web3]);
 
   //TODO - improve code
   const handleBridgeClick = async (): Promise<void> => {
@@ -61,7 +52,7 @@ export function Summary(): JSX.Element {
     );
 
     //check for manually chainged network before calling contract method
-    if (manuallyChaingedNetwork && manuallyChaingedNetwork !== selectedNetwork) {
+    if (wallet.chainId !== selectedNetwork) {
       setSelectedNetwork(null),
         setErrorMsg(
           'Selected network does not match network in provider, select network again before contract call',
@@ -75,11 +66,7 @@ export function Summary(): JSX.Element {
       const depositFee = await depositAdapterContract.methods._depositFee().call();
       const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee);
 
-      const BRIDGE_FEE = '0.001';
-      const bridgeFeeWei = wallet.web3.utils.toWei(BRIDGE_FEE, 'ether');
-      const bridgeFeeBigint = wallet.web3.utils.toBigInt(bridgeFeeWei);
-
-      const value = depositFeeBigint + bridgeFeeBigint;
+      const value = depositFeeBigint + basicFee;
 
       const depositMethod = depositAdapterContract.methods.deposit(
         1,
@@ -119,36 +106,69 @@ export function Summary(): JSX.Element {
 
   return (
     <>
-      <Heading>Step 3: Summary</Heading>
-      Chose network:
-      <Button
-        variant={'primary'}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MOONBASE)}
-      >
-        MOONBASE {selectedNetwork === NetworksChainID.MOONBASE && 'is selected'}
-      </Button>
-      <Button
-        variant={'primary'}
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MUMBAI)}
-      >
-        MUMBAI {selectedNetwork === NetworksChainID.MUMBAI && 'is selected'}
-      </Button>
-      {errorMsg && <p>{errorMsg}</p>}
-      <div>
-        You’re about to launch a validator on Goerli with {value} {currency} from{' '}
-        {selectedNetwork && getNetwork(selectedNetwork).chainName}. Is that correct?
-      </div>
-      {selectedNetwork && (
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        <Button variant={'primary'} onClick={handleBridgeClick}>
-          Bridge Funds
-        </Button>
-      )}
-      <Button variant={'primary'} onClick={handleBackClick}>
-        Back
-      </Button>
+      <Header>
+        <Heading>Step 3: Summary</Heading>
+        <AccountInfo />
+      </Header>
+      <Wrapper>
+        <h2>Chose network:</h2>
+        {/* eslint-disable @typescript-eslint/no-misused-promises */}
+        <ButtonWrapper>
+          <Button
+            onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MOONBASE)}
+            variant={'primary'}
+          >
+            MOONBASE {selectedNetwork === NetworksChainID.MOONBASE && 'is selected'}
+          </Button>
+          <Button
+            variant={'primary'}
+            onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MUMBAI)}
+          >
+            MUMBAI {selectedNetwork === NetworksChainID.MUMBAI && 'is selected'}
+          </Button>
+        </ButtonWrapper>
+        {errorMsg && <p>{errorMsg}</p>}
+        {selectedNetwork && (
+          <InfoBox>
+            You’re about to launch a validator on Goerli with {value} {currency} from{' '}
+            <b>{getNetwork(selectedNetwork).chainName}</b>. Is that correct?
+          </InfoBox>
+        )}
+        <ButtonWrapper>
+          {selectedNetwork && (
+            <Button variant={'primary'} onClick={handleBridgeClick}>
+              Bridge Funds
+            </Button>
+          )}
+          <Button variant={'secondary'} onClick={handleBackClick}>
+            Back
+          </Button>
+        </ButtonWrapper>
+      </Wrapper>
     </>
   );
 }
+
+const Wrapper = styled.div`
+  margin: 36px auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 356px;
+  text-align: center;
+
+  button {
+    align-self: center;
+  }
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: 21px;
+  display: flex;
+  justify-content: space-evenly;
+`;

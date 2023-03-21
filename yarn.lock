@@ -7199,9 +7199,9 @@ __metadata:
     vite-plugin-node-polyfills: ^0.7.0
     vite-plugin-svgr: ^2.4.0
     vite-plugin-top-level-await: ^1.3.0
-    web3: 4.0.1-alpha.5
-    web3-eth-contract: 4.0.1-alpha.5
-    web3-types: ^0.1.1-alpha.4
+    web3: ^4.0.1-rc.0
+    web3-eth-contract: ^4.0.1-rc.0
+    web3-types: ^1.0.0-rc.0
     web3modal: ^1.9.12
   languageName: unknown
   linkType: soft
@@ -7586,7 +7586,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-core@npm:^4.0.1-alpha.5, web3-core@npm:^4.0.1-rc.0":
+"web3-core@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-core@npm:4.0.1-rc.0"
   dependencies:
@@ -7602,15 +7602,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-errors@npm:^0.1.1-alpha.4":
-  version: 0.1.1-alpha.4
-  resolution: "web3-errors@npm:0.1.1-alpha.4"
-  dependencies:
-    web3-types: ^0.1.1-alpha.4
-  checksum: 4e6e4b56830f566f0712c922f8478458090d6d33a190210a5fdb4fe9a63736a0fb624bebed4079b34be9000e6568114ab00d2417e468edaa5a126ef243f198b6
-  languageName: node
-  linkType: hard
-
 "web3-errors@npm:^1.0.0-rc.0":
   version: 1.0.0-rc.0
   resolution: "web3-errors@npm:1.0.0-rc.0"
@@ -7620,7 +7611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-abi@npm:^4.0.1-alpha.5, web3-eth-abi@npm:^4.0.1-rc.0":
+"web3-eth-abi@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth-abi@npm:4.0.1-rc.0"
   dependencies:
@@ -7632,7 +7623,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-accounts@npm:^4.0.1-alpha.5, web3-eth-accounts@npm:^4.0.1-rc.0":
+"web3-eth-accounts@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth-accounts@npm:4.0.1-rc.0"
   dependencies:
@@ -7646,22 +7637,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-contract@npm:4.0.1-alpha.5":
-  version: 4.0.1-alpha.5
-  resolution: "web3-eth-contract@npm:4.0.1-alpha.5"
-  dependencies:
-    web3-core: ^4.0.1-alpha.5
-    web3-errors: ^0.1.1-alpha.4
-    web3-eth: ^4.0.1-alpha.5
-    web3-eth-abi: ^4.0.1-alpha.5
-    web3-types: ^0.1.1-alpha.4
-    web3-utils: ^4.0.1-alpha.5
-    web3-validator: ^0.1.1-alpha.5
-  checksum: fa4c114fc785f0e9e78208670733e1134e37323f592ec6eabb6aaa1d07b9d013560cea17ec8366fe2f877254ed9cdac68cb4680dd12bf9af57411e4092316f4a
-  languageName: node
-  linkType: hard
-
-"web3-eth-contract@npm:^4.0.1-alpha.5, web3-eth-contract@npm:^4.0.1-rc.0":
+"web3-eth-contract@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth-contract@npm:4.0.1-rc.0"
   dependencies:
@@ -7676,7 +7652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-ens@npm:^4.0.1-alpha.5":
+"web3-eth-ens@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth-ens@npm:4.0.1-rc.0"
   dependencies:
@@ -7692,7 +7668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-iban@npm:^4.0.1-alpha.5, web3-eth-iban@npm:^4.0.1-rc.0":
+"web3-eth-iban@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth-iban@npm:4.0.1-rc.0"
   dependencies:
@@ -7703,7 +7679,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-personal@npm:^4.0.1-alpha.5":
+"web3-eth-personal@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth-personal@npm:4.0.1-rc.0"
   dependencies:
@@ -7717,7 +7693,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth@npm:^4.0.1-alpha.5, web3-eth@npm:^4.0.1-rc.0":
+"web3-eth@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-eth@npm:4.0.1-rc.0"
   dependencies:
@@ -7738,7 +7714,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-net@npm:^4.0.1-alpha.5, web3-net@npm:^4.0.1-rc.0":
+"web3-net@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-net@npm:4.0.1-rc.0"
   dependencies:
@@ -7827,13 +7803,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-types@npm:^0.1.1-alpha.4":
-  version: 0.1.1-alpha.4
-  resolution: "web3-types@npm:0.1.1-alpha.4"
-  checksum: e827a2b9ad95497d1cd1a2a800c8207f5b6bb54b50da78b7ba49be8fc49440a59c9f98548f51f52779762027784acca6aef801f7bc1dfa8fb2cd8058611d4009
-  languageName: node
-  linkType: hard
-
 "web3-types@npm:^1.0.0-rc.0":
   version: 1.0.0-rc.0
   resolution: "web3-types@npm:1.0.0-rc.0"
@@ -7841,7 +7810,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-utils@npm:^4.0.1-alpha.5, web3-utils@npm:^4.0.1-rc.0":
+"web3-utils@npm:^4.0.1-rc.0":
   version: 4.0.1-rc.0
   resolution: "web3-utils@npm:4.0.1-rc.0"
   dependencies:
@@ -7850,18 +7819,6 @@ __metadata:
     web3-types: ^1.0.0-rc.0
     web3-validator: ^1.0.0-rc.0
   checksum: b2cadfa7f4fb4088383517bb74a6295b855f604267c31bb18b431a4b01dcda03df35d5dafb7d8eb065224673c31f52e036b0dc584ef11607c83db7c4d75f2f50
-  languageName: node
-  linkType: hard
-
-"web3-validator@npm:^0.1.1-alpha.5":
-  version: 0.1.1-alpha.5
-  resolution: "web3-validator@npm:0.1.1-alpha.5"
-  dependencies:
-    ajv: ^8.11.0
-    ethereum-cryptography: ^1.1.2
-    web3-errors: ^0.1.1-alpha.4
-    web3-types: ^0.1.1-alpha.4
-  checksum: 133c6fec6eee5a831b174368d8c52db85bffd731c9bad3e7316689405535ca56f1bc5edebba0fe99b6afe6c6865d3b7ba66d57909c9049d00da3789f0cf9a572
   languageName: node
   linkType: hard
 
@@ -7877,23 +7834,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3@npm:4.0.1-alpha.5":
-  version: 4.0.1-alpha.5
-  resolution: "web3@npm:4.0.1-alpha.5"
+"web3@npm:^4.0.1-rc.0":
+  version: 4.0.1-rc.0
+  resolution: "web3@npm:4.0.1-rc.0"
   dependencies:
-    web3-core: ^4.0.1-alpha.5
-    web3-errors: ^0.1.1-alpha.4
-    web3-eth: ^4.0.1-alpha.5
-    web3-eth-abi: ^4.0.1-alpha.5
-    web3-eth-accounts: ^4.0.1-alpha.5
-    web3-eth-contract: ^4.0.1-alpha.5
-    web3-eth-ens: ^4.0.1-alpha.5
-    web3-eth-iban: ^4.0.1-alpha.5
-    web3-eth-personal: ^4.0.1-alpha.5
-    web3-net: ^4.0.1-alpha.5
-    web3-types: ^0.1.1-alpha.4
-    web3-utils: ^4.0.1-alpha.5
-  checksum: e13a6128f81a16229afb5981028d72f8ac83f0640fc0128b88147e3ca5bf3fbb35327354e4e13c37f6c57d45d579b28f83a1876f41cb11ae234f5e0157ffaa0f
+    web3-core: ^4.0.1-rc.0
+    web3-errors: ^1.0.0-rc.0
+    web3-eth: ^4.0.1-rc.0
+    web3-eth-abi: ^4.0.1-rc.0
+    web3-eth-accounts: ^4.0.1-rc.0
+    web3-eth-contract: ^4.0.1-rc.0
+    web3-eth-ens: ^4.0.1-rc.0
+    web3-eth-iban: ^4.0.1-rc.0
+    web3-eth-personal: ^4.0.1-rc.0
+    web3-net: ^4.0.1-rc.0
+    web3-providers-http: ^4.0.1-rc.0
+    web3-providers-ipc: ^4.0.1-rc.0
+    web3-providers-ws: ^4.0.1-rc.0
+    web3-rpc-methods: ^1.0.0-rc.0
+    web3-types: ^1.0.0-rc.0
+    web3-utils: ^4.0.1-rc.0
+    web3-validator: ^1.0.0-rc.0
+  checksum: 4b00a801050383f882a7ab2de4b97bc3da8a117f5a244b393e42468d30921c70dcbcb07d3bccda18678c7ecf9ef00612a669bd6ab29f38e64d5144e26104d460
   languageName: node
   linkType: hard
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import Contract, { EventLog } from 'web3-eth-contract';
+import { Contract } from 'web3';
+import { EventLog } from 'web3-eth-contract';
 import { Heading } from '../../components/Heading';
 import { useStorage } from '../../context/StorageContext';
 import { useEnsuredWallet } from '../../context/WalletContext';

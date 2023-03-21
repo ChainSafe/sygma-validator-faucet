@@ -29,8 +29,19 @@ export function Upload(): JSX.Element {
     <Wrapper>
       <Heading>Step 1: Upload Deposit Data</Heading>
       <InfoBox>
-        Have you generated your mnemonic and validator public keys? If not,{' '}
-        <a href={'#'}>you can do so here.</a>
+        Have you generated your deposit data json file? If not,{' '}
+        <a href="https://goerli.launchpad.ethereum.org/en/overview" target="_blank">
+          you can do so here.
+        </a>
+        <br />
+        Make sure to set "Withdrawal address" to
+        <b>
+          {' '}
+          {import.meta.env.REACT_APP_DESTINATION_CONTRACT ??
+            '0xbdeebc18cbe64a09e4da0bc82cffb6ac5261f9a8'}
+        </b>
+        . We are only funding validators that will return funds to our contract in case of
+        voluntary exit!
       </InfoBox>
       <DropboxSection>
         <p>

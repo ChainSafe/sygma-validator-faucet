@@ -1,8 +1,8 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import Web3Modal from 'web3modal';
 import WalletConnect from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-import { EIP1193Provider } from 'web3-types/lib/web3_base_provider';
+import { Web3BaseProvider } from 'web3-types';
 import { getNetwork } from '../utils/network';
 
 const web3Modal = new Web3Modal({
@@ -22,6 +22,8 @@ const web3Modal = new Web3Modal({
 
 interface WalletContextInterface {
   web3: Web3 | null;
+  account: string | null;
+  chainId: string;
   connect: () => Promise<boolean>;
   disconnect: () => void;
   ensureNetwork: (network: string) => Promise<boolean>;
@@ -33,6 +35,8 @@ interface WalletContextInterface {
  * */
 const defaultState: WalletContextInterface = {
   web3: null,
+  account: null,
+  chainId: '',
   connect: () => {
     return Promise.resolve(false);
   },
@@ -45,15 +49,53 @@ const defaultState: WalletContextInterface = {
 
 const WalletContext = createContext<WalletContextInterface>(defaultState);
 
+async function getChainId(web3: Web3): Promise<`0x${string}`> {
+  const chainId = await web3.eth.getChainId();
+  return `0x${chainId.toString(16)}`;
+}
+
 export function WalletContextProvider({ children }: PropsWithChildren): JSX.Element {
   const [web3, setWeb3] = useState<Web3 | null>(null);
+  const [chainId, setChainId] = useState('');
+  const [account, setAccount] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (web3 === null || !web3.currentProvider) return;
+    const provider = web3.currentProvider;
+
+    // there is typing error https://github.com/web3/web3.js/issues/5939
+    // @ts-ignore
+    provider.on('chainChanged', (chainId: unknown) => {
+      if (typeof chainId !== 'string') return;
+      // TODO: validate if is valid chain ID hex
+      setChainId(chainId);
+    });
+    // @ts-ignore
+    provider.on('accountsChanged', (accounts: string[]) => {
+      if (!accounts[0]) return;
+      setAccount(accounts[0]);
+    });
+
+    return () => {
+      if (!provider.removeAllListeners) return;
+      provider.removeAllListeners('chainChanged');
+      provider.removeAllListeners('accountsChanged');
+    };
+  }, [web3]);
 
   const connect = async (): Promise<boolean> => {
     if (web3 !== null) return true;
 
     try {
-      const provider = (await web3Modal.connect()) as EIP1193Provider<{}>;
-      setWeb3(new Web3(provider));
+      const provider = (await web3Modal.connect()) as Web3BaseProvider;
+
+      const instance = new Web3(provider);
+      const chainId = await getChainId(instance);
+      const accounts = await instance.eth.getAccounts();
+
+      setChainId(chainId);
+      setWeb3(instance);
+      setAccount(accounts[0]);
       return true;
     } catch (error) {
       console.error(error);
@@ -64,22 +106,25 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
 
   const disconnect = (): void => {
     web3Modal.clearCachedProvider();
-    setWeb3(null);
     console.log('cleared cached provider');
+
+    if (web3 === null || !web3.currentProvider) return;
+    const provider = web3.currentProvider;
+    setWeb3(null);
+
+    if (!provider.removeAllListeners) return;
+    provider.removeAllListeners('chainChanged');
+    provider.removeAllListeners('accountsChanged');
   };
 
   const ensureNetwork = async (network: string): Promise<boolean> => {
-    if (web3 === null) return false;
-    const chainId = await web3.eth.getChainId();
-    const chainIdHex = `0x${chainId.toString(16)}`;
+    if (web3 === null || !web3.currentProvider) return false;
+    const chainId = await getChainId(web3);
 
-    console.log('start', network, chainIdHex);
-
-    if (network === chainIdHex) return true;
-    const provider = web3.currentProvider as EIP1193Provider<{}>;
+    if (network === chainId) return true;
+    const provider = web3.currentProvider;
 
     console.log('before switch');
-
     try {
       await provider.request({
         method: 'wallet_switchEthereumChain',
@@ -107,7 +152,9 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
   };
 
   return (
-    <WalletContext.Provider value={{ web3, connect, disconnect, ensureNetwork }}>
+    <WalletContext.Provider
+      value={{ web3, account, chainId, connect, disconnect, ensureNetwork }}
+    >
       {children}
     </WalletContext.Provider>
   );
