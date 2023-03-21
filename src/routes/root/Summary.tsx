@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Contract from 'web3-eth-contract';
+import { Contract } from 'web3';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
@@ -11,6 +11,7 @@ import { InfoBox } from '../../components/lib';
 import { DEPOSIT_ADAPTER_ORIGIN, DepositAdapterABI } from '../../contracts';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
+import { useBasicFee } from '../../hooks/useBasicFee';
 
 // mocks
 const value = '{value}';
@@ -20,6 +21,7 @@ export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
   const storage = useStorage();
   const navigate = useNavigate();
+  const [basicFee] = useBasicFee();
 
   const [selectedNetwork, setSelectedNetwork] = useState<Networks | null>(null);
 
@@ -66,11 +68,7 @@ export function Summary(): JSX.Element {
       const depositFee = await depositAdapterContract.methods._depositFee().call();
       const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee);
 
-      const BRIDGE_FEE = '0.001';
-      const bridgeFeeWei = wallet.web3.utils.toWei(BRIDGE_FEE, 'ether');
-      const bridgeFeeBigint = wallet.web3.utils.toBigInt(bridgeFeeWei);
-
-      const value = depositFeeBigint + bridgeFeeBigint;
+      const value = depositFeeBigint + basicFee;
 
       const depositMethod = depositAdapterContract.methods.deposit(
         1,
