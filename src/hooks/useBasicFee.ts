@@ -35,8 +35,7 @@ export function useBasicFee(): [bigint] {
       ._fee()
       .call()
       .then((result) => {
-        if (typeof result !== 'bigint') return;
-        setFee(result);
+        setFee(Web3.utils.toBigInt(result));
       })
       .catch((error) => {
         console.error('useBasicFee error', error);
