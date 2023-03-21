@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import Contract from 'web3-eth-contract';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
@@ -19,22 +19,8 @@ export function Summary(): JSX.Element {
   const navigate = useNavigate();
 
   const [selectedNetwork, setSelectedNetwork] = useState<Networks | null>(null);
-  const [manuallyChaingedNetwork, setManuallyChaingedNetwork] = useState<string | null>(
-    null,
-  );
 
   const [errorMsg, setErrorMsg] = useState<string>();
-
-  useEffect(() => {
-    if (wallet.web3.currentProvider) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const provider = wallet.web3.currentProvider as any;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      provider.on('chainChanged', (chainId: number) => {
-        setManuallyChaingedNetwork(chainId.toString());
-      });
-    }
-  }, [wallet.web3]);
 
   //TODO - improve code
   const handleBridgeClick = async (): Promise<void> => {
@@ -63,7 +49,7 @@ export function Summary(): JSX.Element {
     );
 
     //check for manually chainged network before calling contract method
-    if (manuallyChaingedNetwork && manuallyChaingedNetwork !== selectedNetwork) {
+    if (wallet.chainId !== selectedNetwork) {
       setSelectedNetwork(null),
         setErrorMsg(
           'Selected network does not match network in provider, select network again before contract call',
