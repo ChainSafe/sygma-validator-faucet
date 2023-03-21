@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import projectIcon from '../../assets/icons/project-icon.svg';
 import chestIcon from '../../assets/icons/chest-icon.svg';
 import heartIcon from '../../assets/icons/heart-icon.svg';
+import sygmaIcon from '../../assets/icons/sygma.svg';
 
 export function SideMenu(): JSX.Element {
   return (
@@ -20,6 +21,7 @@ export function SideMenu(): JSX.Element {
           FAQ
         </MenuItem>
       </nav>
+      <PoweredBySygmaLogo className="sygma" src={sygmaIcon} alt="powered by sygma" />
     </SidebarWrapper>
   );
 }
@@ -66,4 +68,11 @@ const MenuItem = styled.a`
     width: 100%;
     margin-right: 11px;
   }
+`;
+
+const PoweredBySygmaLogo = styled.img`
+  position: absolute;
+  margin-bottom: 38px;
+  margin-left: 17px;
+  bottom: 0;
 `;
