@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useWallet } from '../../context/WalletContext';
+import { InfoBox } from '../../components/lib';
 
 export function ConnectWallet(): JSX.Element {
   const wallet = useWallet();
@@ -14,9 +15,9 @@ export function ConnectWallet(): JSX.Element {
     return (
       <Wrapper>
         <Heading>Step 2: Connect Wallet</Heading>
-        <InfoText>
+        <InfoBoxStyled>
           Connect to the testnet you’d like to launch your Goerli validator from.
-        </InfoText>
+        </InfoBoxStyled>
         <Button variant="primary" onClick={handleConnectClick}>
           Connect Wallet
         </Button>
@@ -35,10 +36,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const InfoText = styled.section`
-  text-align: center;
-  font-size: 1.125rem;
+const InfoBoxStyled = styled(InfoBox)`
   margin: 126px auto 16px auto;
-  max-width: 392px;
-  color: #c2cceb;
 `;

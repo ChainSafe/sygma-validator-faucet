@@ -22,6 +22,7 @@ const web3Modal = new Web3Modal({
 
 interface WalletContextInterface {
   web3: Web3 | null;
+  account: string | null;
   chainId: string;
   connect: () => Promise<boolean>;
   disconnect: () => void;
@@ -34,6 +35,7 @@ interface WalletContextInterface {
  * */
 const defaultState: WalletContextInterface = {
   web3: null,
+  account: null,
   chainId: '',
   connect: () => {
     return Promise.resolve(false);
@@ -55,6 +57,7 @@ async function getChainId(web3: Web3): Promise<`0x${string}`> {
 export function WalletContextProvider({ children }: PropsWithChildren): JSX.Element {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [chainId, setChainId] = useState('');
+  const [account, setAccount] = useState<string | null>(null);
 
   useEffect(() => {
     if (web3 === null || !web3.currentProvider) return;
@@ -85,6 +88,8 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
 
       setChainId(chainId);
       setWeb3(instance);
+      const accounts = await instance.eth.getAccounts();
+      setAccount(accounts[0]);
       return true;
     } catch (error) {
       console.error(error);
@@ -134,7 +139,9 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
   };
 
   return (
-    <WalletContext.Provider value={{ web3, chainId, connect, disconnect, ensureNetwork }}>
+    <WalletContext.Provider
+      value={{ web3, account, chainId, connect, disconnect, ensureNetwork }}
+    >
       {children}
     </WalletContext.Provider>
   );
