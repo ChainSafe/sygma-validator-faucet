@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Contract from 'web3-eth-contract';
+import { Contract } from 'web3';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components/Heading';

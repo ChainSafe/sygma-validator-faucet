@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Web3 from 'web3';
+import { utils } from 'web3';
 import { useEnsuredWallet } from '../context/WalletContext';
 import {
   BasicFeeHandlerABI,
@@ -8,8 +8,8 @@ import {
 } from '../contracts';
 
 const BRIDGE_FEE = '0.001';
-const bridgeFeeWei = Web3.utils.toWei(BRIDGE_FEE, 'ether');
-const defaultFee = Web3.utils.toBigInt(bridgeFeeWei);
+const bridgeFeeWei = utils.toWei(BRIDGE_FEE, 'ether');
+const defaultFee = utils.toBigInt(bridgeFeeWei);
 
 const getAddressByChainID = (chainID: string): string | false => {
   switch (chainID) {
@@ -35,7 +35,7 @@ export function useBasicFee(): [bigint] {
       ._fee()
       .call()
       .then((result) => {
-        setFee(Web3.utils.toBigInt(result));
+        setFee(utils.toBigInt(result));
       })
       .catch((error) => {
         console.error('useBasicFee error', error);
