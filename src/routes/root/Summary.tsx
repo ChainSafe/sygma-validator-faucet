@@ -40,7 +40,6 @@ export function Summary(): JSX.Element {
   const handleBridgeClick = async (): Promise<void> => {
     if (!selectedNetwork || !storage.data.json) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const accounts = await wallet.web3.eth.getAccounts();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     // @ts-ignore
@@ -89,17 +88,20 @@ export function Summary(): JSX.Element {
       );
 
       const gas = await depositMethod.estimateGas({ value: value.toString() });
-      const result: TransactionReceipt = await depositMethod.send({
-        from: accounts[0],
-        gas: gas.toString(),
-        value: value.toString(),
-      });
-      console.log("result")
-      console.log(result)
-      if(result.status === 1n)
-        storage.update({txReceipt: result})
-        navigate('/transactions');
-      
+      await depositMethod
+        .send({
+          from: accounts[0],
+          gas: gas.toString(),
+          value: value.toString(),
+        })
+        .on('receipt', (receipt: TransactionReceipt) => {
+          console.warn(receipt);
+          if (receipt.status === 1n) {
+            const txReceiptHash = receipt.transactionHash.toString();
+            storage.update({ txReceiptHash });
+            navigate('/transactions');
+          }
+        });
     } catch (e) {
       console.log(e);
       throw e;

@@ -2,710 +2,710 @@ export const bridgeABI = [
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "domainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'domainID',
+        type: 'uint8',
       },
       {
-        internalType: "address",
-        name: "accessControl",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'accessControl',
+        type: 'address',
+      },
     ],
-    stateMutability: "nonpayable",
-    type: "constructor"
+    stateMutability: 'nonpayable',
+    type: 'constructor',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "address",
-        name: "newAccessControl",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'newAccessControl',
+        type: 'address',
+      },
     ],
-    name: "AccessControlChanged",
-    type: "event"
+    name: 'AccessControlChanged',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "uint8",
-        name: "destinationDomainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'destinationDomainID',
+        type: 'uint8',
       },
       {
         indexed: false,
-        internalType: "bytes32",
-        name: "resourceID",
-        type: "bytes32"
+        internalType: 'bytes32',
+        name: 'resourceID',
+        type: 'bytes32',
       },
       {
         indexed: false,
-        internalType: "uint64",
-        name: "depositNonce",
-        type: "uint64"
+        internalType: 'uint64',
+        name: 'depositNonce',
+        type: 'uint64',
       },
       {
         indexed: true,
-        internalType: "address",
-        name: "user",
-        type: "address"
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
         indexed: false,
-        internalType: "bytes",
-        name: "data",
-        type: "bytes"
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
       },
       {
         indexed: false,
-        internalType: "bytes",
-        name: "handlerResponse",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'handlerResponse',
+        type: 'bytes',
+      },
     ],
-    name: "Deposit",
-    type: "event"
+    name: 'Deposit',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [],
-    name: "EndKeygen",
-    type: "event"
+    name: 'EndKeygen',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "bytes",
-        name: "lowLevelData",
-        type: "bytes"
+        internalType: 'bytes',
+        name: 'lowLevelData',
+        type: 'bytes',
       },
       {
         indexed: false,
-        internalType: "uint8",
-        name: "originDomainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'originDomainID',
+        type: 'uint8',
       },
       {
         indexed: false,
-        internalType: "uint64",
-        name: "depositNonce",
-        type: "uint64"
-      }
+        internalType: 'uint64',
+        name: 'depositNonce',
+        type: 'uint64',
+      },
     ],
-    name: "FailedHandlerExecution",
-    type: "event"
+    name: 'FailedHandlerExecution',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "address",
-        name: "newFeeHandler",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'newFeeHandler',
+        type: 'address',
+      },
     ],
-    name: "FeeHandlerChanged",
-    type: "event"
+    name: 'FeeHandlerChanged',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "string",
-        name: "hash",
-        type: "string"
-      }
+        internalType: 'string',
+        name: 'hash',
+        type: 'string',
+      },
     ],
-    name: "KeyRefresh",
-    type: "event"
+    name: 'KeyRefresh',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    name: "Paused",
-    type: "event"
+    name: 'Paused',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "uint8",
-        name: "originDomainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'originDomainID',
+        type: 'uint8',
       },
       {
         indexed: false,
-        internalType: "uint64",
-        name: "depositNonce",
-        type: "uint64"
+        internalType: 'uint64',
+        name: 'depositNonce',
+        type: 'uint64',
       },
       {
         indexed: false,
-        internalType: "bytes32",
-        name: "dataHash",
-        type: "bytes32"
-      }
+        internalType: 'bytes32',
+        name: 'dataHash',
+        type: 'bytes32',
+      },
     ],
-    name: "ProposalExecution",
-    type: "event"
+    name: 'ProposalExecution',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "string",
-        name: "txHash",
-        type: "string"
-      }
+        internalType: 'string',
+        name: 'txHash',
+        type: 'string',
+      },
     ],
-    name: "Retry",
-    type: "event"
+    name: 'Retry',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [],
-    name: "StartKeygen",
-    type: "event"
+    name: 'StartKeygen',
+    type: 'event',
   },
   {
     anonymous: false,
     inputs: [
       {
         indexed: false,
-        internalType: "address",
-        name: "account",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
     ],
-    name: "Unpaused",
-    type: "event"
+    name: 'Unpaused',
+    type: 'event',
   },
   {
     inputs: [],
-    name: "_MPCAddress",
+    name: '_MPCAddress',
     outputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "_accessControl",
+    name: '_accessControl',
     outputs: [
       {
-        internalType: "contract IAccessControlSegregator",
-        name: "",
-        type: "address"
-      }
+        internalType: 'contract IAccessControlSegregator',
+        name: '',
+        type: 'address',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "",
-        type: "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    name: "_depositCounts",
+    name: '_depositCounts',
     outputs: [
       {
-        internalType: "uint64",
-        name: "",
-        type: "uint64"
-      }
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "_domainID",
+    name: '_domainID',
     outputs: [
       {
-        internalType: "uint8",
-        name: "",
-        type: "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "_feeHandler",
+    name: '_feeHandler',
     outputs: [
       {
-        internalType: "contract IFeeHandler",
-        name: "",
-        type: "address"
-      }
+        internalType: 'contract IFeeHandler',
+        name: '',
+        type: 'address',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32"
-      }
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
     ],
-    name: "_resourceIDToHandlerAddress",
+    name: '_resourceIDToHandlerAddress',
     outputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newAccessControl",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'newAccessControl',
+        type: 'address',
+      },
     ],
-    name: "adminChangeAccessControl",
+    name: 'adminChangeAccessControl',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newFeeHandler",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'newFeeHandler',
+        type: 'address',
+      },
     ],
-    name: "adminChangeFeeHandler",
+    name: 'adminChangeFeeHandler',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "adminPauseTransfers",
+    name: 'adminPauseTransfers',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "handlerAddress",
-        type: "address"
+        internalType: 'address',
+        name: 'handlerAddress',
+        type: 'address',
       },
       {
-        internalType: "address",
-        name: "tokenAddress",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'tokenAddress',
+        type: 'address',
+      },
     ],
-    name: "adminSetBurnable",
+    name: 'adminSetBurnable',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "domainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'domainID',
+        type: 'uint8',
       },
       {
-        internalType: "uint64",
-        name: "nonce",
-        type: "uint64"
-      }
+        internalType: 'uint64',
+        name: 'nonce',
+        type: 'uint64',
+      },
     ],
-    name: "adminSetDepositNonce",
+    name: 'adminSetDepositNonce',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "forwarder",
-        type: "address"
+        internalType: 'address',
+        name: 'forwarder',
+        type: 'address',
       },
       {
-        internalType: "bool",
-        name: "valid",
-        type: "bool"
-      }
+        internalType: 'bool',
+        name: 'valid',
+        type: 'bool',
+      },
     ],
-    name: "adminSetForwarder",
+    name: 'adminSetForwarder',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "handlerAddress",
-        type: "address"
+        internalType: 'address',
+        name: 'handlerAddress',
+        type: 'address',
       },
       {
-        internalType: "bytes32",
-        name: "resourceID",
-        type: "bytes32"
+        internalType: 'bytes32',
+        name: 'resourceID',
+        type: 'bytes32',
       },
       {
-        internalType: "address",
-        name: "contractAddress",
-        type: "address"
+        internalType: 'address',
+        name: 'contractAddress',
+        type: 'address',
       },
       {
-        internalType: "bytes",
-        name: "args",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'args',
+        type: 'bytes',
+      },
     ],
-    name: "adminSetResource",
+    name: 'adminSetResource',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "adminUnpauseTransfers",
+    name: 'adminUnpauseTransfers',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "handlerAddress",
-        type: "address"
+        internalType: 'address',
+        name: 'handlerAddress',
+        type: 'address',
       },
       {
-        internalType: "bytes",
-        name: "data",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    name: "adminWithdraw",
+    name: 'adminWithdraw',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "destinationDomainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'destinationDomainID',
+        type: 'uint8',
       },
       {
-        internalType: "bytes32",
-        name: "resourceID",
-        type: "bytes32"
+        internalType: 'bytes32',
+        name: 'resourceID',
+        type: 'bytes32',
       },
       {
-        internalType: "bytes",
-        name: "depositData",
-        type: "bytes"
+        internalType: 'bytes',
+        name: 'depositData',
+        type: 'bytes',
       },
       {
-        internalType: "bytes",
-        name: "feeData",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'feeData',
+        type: 'bytes',
+      },
     ],
-    name: "deposit",
+    name: 'deposit',
     outputs: [],
-    stateMutability: "payable",
-    type: "function"
+    stateMutability: 'payable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "MPCAddress",
-        type: "address"
-      }
+        internalType: 'address',
+        name: 'MPCAddress',
+        type: 'address',
+      },
     ],
-    name: "endKeygen",
+    name: 'endKeygen',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
         components: [
           {
-            internalType: "uint8",
-            name: "originDomainID",
-            type: "uint8"
+            internalType: 'uint8',
+            name: 'originDomainID',
+            type: 'uint8',
           },
           {
-            internalType: "uint64",
-            name: "depositNonce",
-            type: "uint64"
+            internalType: 'uint64',
+            name: 'depositNonce',
+            type: 'uint64',
           },
           {
-            internalType: "bytes32",
-            name: "resourceID",
-            type: "bytes32"
+            internalType: 'bytes32',
+            name: 'resourceID',
+            type: 'bytes32',
           },
           {
-            internalType: "bytes",
-            name: "data",
-            type: "bytes"
-          }
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
+          },
         ],
-        internalType: "struct Bridge.Proposal",
-        name: "proposal",
-        type: "tuple"
+        internalType: 'struct Bridge.Proposal',
+        name: 'proposal',
+        type: 'tuple',
       },
       {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'signature',
+        type: 'bytes',
+      },
     ],
-    name: "executeProposal",
+    name: 'executeProposal',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
         components: [
           {
-            internalType: "uint8",
-            name: "originDomainID",
-            type: "uint8"
+            internalType: 'uint8',
+            name: 'originDomainID',
+            type: 'uint8',
           },
           {
-            internalType: "uint64",
-            name: "depositNonce",
-            type: "uint64"
+            internalType: 'uint64',
+            name: 'depositNonce',
+            type: 'uint64',
           },
           {
-            internalType: "bytes32",
-            name: "resourceID",
-            type: "bytes32"
+            internalType: 'bytes32',
+            name: 'resourceID',
+            type: 'bytes32',
           },
           {
-            internalType: "bytes",
-            name: "data",
-            type: "bytes"
-          }
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
+          },
         ],
-        internalType: "struct Bridge.Proposal[]",
-        name: "proposals",
-        type: "tuple[]"
+        internalType: 'struct Bridge.Proposal[]',
+        name: 'proposals',
+        type: 'tuple[]',
       },
       {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'signature',
+        type: 'bytes',
+      },
     ],
-    name: "executeProposals",
+    name: 'executeProposals',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "domainID",
-        type: "uint8"
+        internalType: 'uint8',
+        name: 'domainID',
+        type: 'uint8',
       },
       {
-        internalType: "uint256",
-        name: "depositNonce",
-        type: "uint256"
-      }
+        internalType: 'uint256',
+        name: 'depositNonce',
+        type: 'uint256',
+      },
     ],
-    name: "isProposalExecuted",
+    name: 'isProposalExecuted',
     outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    name: "isValidForwarder",
+    name: 'isValidForwarder',
     outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "paused",
+    name: 'paused',
     outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "string",
-        name: "hash",
-        type: "string"
-      }
+        internalType: 'string',
+        name: 'hash',
+        type: 'string',
+      },
     ],
-    name: "refreshKey",
+    name: 'refreshKey',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "string",
-        name: "txHash",
-        type: "string"
-      }
+        internalType: 'string',
+        name: 'txHash',
+        type: 'string',
+      },
     ],
-    name: "retry",
+    name: 'retry',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [],
-    name: "startKeygen",
+    name: 'startKeygen',
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
       {
-        internalType: "uint8",
-        name: "",
-        type: "uint8"
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
       },
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    name: "usedNonces",
+    name: 'usedNonces',
     outputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
     inputs: [
       {
         components: [
           {
-            internalType: "uint8",
-            name: "originDomainID",
-            type: "uint8"
+            internalType: 'uint8',
+            name: 'originDomainID',
+            type: 'uint8',
           },
           {
-            internalType: "uint64",
-            name: "depositNonce",
-            type: "uint64"
+            internalType: 'uint64',
+            name: 'depositNonce',
+            type: 'uint64',
           },
           {
-            internalType: "bytes32",
-            name: "resourceID",
-            type: "bytes32"
+            internalType: 'bytes32',
+            name: 'resourceID',
+            type: 'bytes32',
           },
           {
-            internalType: "bytes",
-            name: "data",
-            type: "bytes"
-          }
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
+          },
         ],
-        internalType: "struct Bridge.Proposal[]",
-        name: "proposals",
-        type: "tuple[]"
+        internalType: 'struct Bridge.Proposal[]',
+        name: 'proposals',
+        type: 'tuple[]',
       },
       {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes"
-      }
+        internalType: 'bytes',
+        name: 'signature',
+        type: 'bytes',
+      },
     ],
-    name: "verify",
+    name: 'verify',
     outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    stateMutability: "view",
-    type: "function"
-  }
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const;

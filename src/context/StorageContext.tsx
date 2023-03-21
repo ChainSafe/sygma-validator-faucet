@@ -1,11 +1,10 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import _merge from 'lodash/merge';
 import { DepositKeyInterface } from '../components/JSONDropzone/validation';
-import { TransactionReceipt } from 'web3-eth-contract/lib/types';
 
 interface Data {
   json?: DepositKeyInterface;
-  txReceipt?: TransactionReceipt;
+  txReceiptHash?: string;
 }
 
 interface StorageContextContextInterface {

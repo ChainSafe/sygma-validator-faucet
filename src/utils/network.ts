@@ -1,3 +1,10 @@
+import web3 from 'web3/lib/web3';
+import {
+  BRIDGE_ADDRESS_GOERLI,
+  BRIDGE_ADDRESS_MOONBASE,
+  BRIDGE_ADDRESS_MUMBAI,
+} from '../contracts/addresses';
+
 export interface Network {
   chainId: NetworksChainID; // A 0x-prefixed hexadecimal string
   chainName: string;
@@ -49,4 +56,35 @@ export function getNetwork(chainId: string): Network {
   }
 }
 
+export const getBridgeAddress = (networkChainId: NetworksChainID): string => {
+  switch (networkChainId) {
+    case NetworksChainID.GOERLI:
+      return BRIDGE_ADDRESS_GOERLI;
+      break;
+    case NetworksChainID.MOONBASE:
+      return BRIDGE_ADDRESS_MOONBASE;
+      break;
+    case NetworksChainID.MUMBAI:
+      return BRIDGE_ADDRESS_MUMBAI;
+      break;
+    default:
+      throw new Error(`Bridge contract not available for networkChainId`);
+  }
+};
 
+export const getDomainID = (networkChainId: bigint): bigint => {
+  const chainIdHex = web3.utils.toHex(networkChainId) as NetworksChainID;
+  switch (chainIdHex) {
+    case NetworksChainID.GOERLI:
+      return 1n;
+      break;
+    case NetworksChainID.MOONBASE:
+      return 2n;
+      break;
+    case NetworksChainID.MUMBAI:
+      return 3n;
+      break;
+    default:
+      throw new Error(`There is no DomainID for that networkChainId`);
+  }
+};

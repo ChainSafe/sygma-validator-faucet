@@ -80,7 +80,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                     transactionStatus: TransactionStatus.READY,
                     depositStatus: DepositStatus.ALREADY_DEPOSITED,
                   });
-                  handlePubKeyAlreadyDeposited()
+                  handlePubKeyAlreadyDeposited();
                 } else {
                   //Check of withdrawal credentials match goerli contract address
                   if (
@@ -202,8 +202,6 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const handlePubKeyAlreadyDeposited = (): void => {
     setFileError(<div>Pubkey already deposited</div>);
   };
-
-
 
   const renderMessage = useMemo((): JSX.Element => {
     if (isDragReject && !isFileStaged) {

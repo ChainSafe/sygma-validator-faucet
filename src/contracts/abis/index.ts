@@ -1,2 +1,2 @@
-export * from "./depositAdapterABI";
-export * from "./bridgeABI";
+export * from './depositAdapterABI';
+export * from './bridgeABI';
