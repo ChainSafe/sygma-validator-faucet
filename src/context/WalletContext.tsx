@@ -56,8 +56,6 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [chainId, setChainId] = useState('');
 
-  console.log(chainId);
-
   useEffect(() => {
     if (web3 === null || !web3.currentProvider) return;
     const provider = web3.currentProvider;
@@ -66,7 +64,7 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
     // @ts-ignore
     provider.on('chainChanged', (chainId: unknown) => {
       if (typeof chainId !== 'string') return;
-      // TODO: validate if is valid chain ID
+      // TODO: validate if is valid chain ID hex
       setChainId(chainId);
     });
 
