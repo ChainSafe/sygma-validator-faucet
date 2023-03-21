@@ -69,7 +69,7 @@ export function Transactions(): JSX.Element {
         });
       }
 
-      // TODO - add retry with .getPastEvents method if user initally reject network change
+      // TODO - improve either with contract.events, or maybe axios.get(`${BEACONCHAIN_URL}/api/v1/validator/${pubkeys.join(',',)}/deposits`)
       if (steps === TX_STEPS.SendingFunds) {
         await wallet.ensureNetwork(NetworksChainID.GOERLI);
 
@@ -100,8 +100,6 @@ export function Transactions(): JSX.Element {
           );
           pastEvents.forEach((log) => {
             const pastLog = log as EventLog;
-            console.log('log');
-            console.log(log);
             if (
               pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
               pastLog.returnValues.originDomainID == logCompareData?.originDomainID
