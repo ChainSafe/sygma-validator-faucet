@@ -70,10 +70,16 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
       // TODO: validate if is valid chain ID hex
       setChainId(chainId);
     });
+    // @ts-ignore
+    provider.on('accountsChanged', (accounts: string[]) => {
+      if (!accounts[0]) return;
+      setAccount(accounts[0]);
+    });
 
     return () => {
       if (!provider.removeAllListeners) return;
       provider.removeAllListeners('chainChanged');
+      provider.removeAllListeners('accountsChanged');
     };
   }, [web3]);
 
@@ -85,10 +91,10 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
 
       const instance = new Web3(provider);
       const chainId = await getChainId(instance);
+      const accounts = await instance.eth.getAccounts();
 
       setChainId(chainId);
       setWeb3(instance);
-      const accounts = await instance.eth.getAccounts();
       setAccount(accounts[0]);
       return true;
     } catch (error) {
@@ -100,8 +106,15 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
 
   const disconnect = (): void => {
     web3Modal.clearCachedProvider();
-    setWeb3(null);
     console.log('cleared cached provider');
+
+    if (web3 === null || !web3.currentProvider) return;
+    const provider = web3.currentProvider;
+    setWeb3(null);
+
+    if (!provider.removeAllListeners) return;
+    provider.removeAllListeners('chainChanged');
+    provider.removeAllListeners('accountsChanged');
   };
 
   const ensureNetwork = async (network: string): Promise<boolean> => {
