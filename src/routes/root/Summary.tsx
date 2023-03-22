@@ -11,6 +11,8 @@ import { InfoBox } from '../../components/lib';
 import { DEPOSIT_ADAPTER_ORIGIN, DepositAdapterABI } from '../../contracts';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
+import checkmark from '../../assets/icons/checkmark.svg';
+import { ButtonStyled } from '../../components/Button/Button';
 import { useBasicFee } from '../../hooks/useBasicFee';
 
 // mocks
@@ -109,18 +111,24 @@ export function Summary(): JSX.Element {
         <h2>Chose network:</h2>
         {/* eslint-disable @typescript-eslint/no-misused-promises */}
         <ButtonWrapper>
-          <Button
+          <ButtonSelectNetwork
             onClick={(): Promise<void> => handleChooseNetwork(Networks.MOONBASE)}
             variant={'primary'}
           >
-            MOONBASE {selectedNetwork === Networks.MOONBASE && 'is selected'}
-          </Button>
-          <Button
+            MOONBASE
+            {selectedNetwork === Networks.MOONBASE && (
+              <CheckmarkIcon src={checkmark} alt={'selected network Moonbase'} />
+            )}
+          </ButtonSelectNetwork>
+          <ButtonSelectNetwork
             variant={'primary'}
             onClick={(): Promise<void> => handleChooseNetwork(Networks.MUMBAI)}
           >
-            MUMBAI {selectedNetwork === Networks.MUMBAI && 'is selected'}
-          </Button>
+            MUMBAI
+            {selectedNetwork === Networks.MUMBAI && (
+              <CheckmarkIcon src={checkmark} alt={'selected network Moonbase'} />
+            )}
+          </ButtonSelectNetwork>
         </ButtonWrapper>
         {errorMsg && <p>{errorMsg}</p>}
         {selectedNetwork && (
@@ -166,4 +174,23 @@ const ButtonWrapper = styled.div`
   margin-top: 21px;
   display: flex;
   justify-content: space-evenly;
+`;
+
+const ButtonSelectNetwork = styled(ButtonStyled)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 5px 32px;
+
+  img {
+    position: absolute;
+    right: 8px;
+    top: 9px;
+  }
+`;
+
+const CheckmarkIcon = styled.img`
+  width: 18px;
+  height: 18px;
 `;

@@ -21,7 +21,7 @@ export function Button({
   );
 }
 
-const ButtonStyled = styled.button<Props>`
+export const ButtonStyled = styled.button<Props>`
   cursor: pointer;
   padding: 5px 24px;
   height: 40px;
