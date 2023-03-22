@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { TransactionReceipt, Contract } from 'web3';
+import { Contract } from 'web3';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
@@ -51,6 +51,15 @@ export function Summary(): JSX.Element {
       ],
     );
 
+    storage.update({
+      depositContractCalldata: {
+        pubkey: `0x${depositDataJSON.pubkey}`,
+        withdrawal_credentials: `0x${depositDataJSON.withdrawal_credentials}`,
+        signature: `0x${depositDataJSON.signature}`,
+        deposit_data_root: `0x${depositDataJSON.deposit_data_root}`,
+      },
+      depositContractCalldataEncoded: depositContractCalldata,
+    });
     //check for manually chainged network before calling contract method
     if (wallet.chainId !== selectedNetwork) {
       setSelectedNetwork(null),
@@ -75,20 +84,12 @@ export function Summary(): JSX.Element {
       );
 
       const gas = await depositMethod.estimateGas({ value: value.toString() });
-      await depositMethod
-        .send({
-          from: accounts[0],
-          gas: gas.toString(),
-          value: value.toString(),
-        })
-        .on('receipt', (receipt: TransactionReceipt) => {
-          console.warn(receipt);
-          if (receipt.status === 1n) {
-            const txReceiptHash = receipt.transactionHash.toString();
-            storage.update({ txReceiptHash });
-            navigate('/transactions');
-          }
-        });
+      await depositMethod.send({
+        from: accounts[0],
+        gas: gas.toString(),
+        value: value.toString(),
+      });
+      navigate('/transactions');
     } catch (e) {
       console.log(e);
       throw e;

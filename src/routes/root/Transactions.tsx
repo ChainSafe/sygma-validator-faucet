@@ -7,15 +7,6 @@ import { useEnsuredWallet } from '../../context/WalletContext';
 import { bridgeABI } from '../../contracts';
 import { getBridgeAddress, getDomainID, NetworksChainID } from '../../utils/network';
 
-interface DepositLogReturnValues {
-  data: string;
-  depositNonce: bigint;
-  destinationDomainID: bigint;
-  handlerResponse: string;
-  resourceID: string;
-  user: string;
-}
-
 enum TX_STEPS {
   Initializig,
   SendingFunds,
@@ -33,14 +24,13 @@ export function Transactions(): JSX.Element {
   } | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    (async () => {
+    void (async () => {
       if (steps === TX_STEPS.Initializig) {
         const accounts = await wallet.web3.eth.getAccounts();
         const networkChainId = await wallet.web3.eth.getChainId();
 
         // @ts-ignore
-        const depositAdapterContract: Contract<typeof bridgeABI> =
+        const originBridgeContract: Contract<typeof bridgeABI> =
           new wallet.web3.eth.Contract(
             bridgeABI,
             getBridgeAddress(wallet.web3.utils.toHex(networkChainId) as NetworksChainID),
@@ -49,24 +39,36 @@ export function Transactions(): JSX.Element {
               provider: wallet.web3.provider,
             },
           );
-        const transactionHash = storage.data.txReceiptHash;
+        const { depositContractCalldata } = storage.data;
+        if (!depositContractCalldata) return;
+        const interval1 = setInterval(() => {
+          void (async () => {
+            const logs = await originBridgeContract.getPastEvents('Deposit');
+            const log = logs.filter((log) => {
+              const eventLog = log as EventLog;
+              console.log(eventLog.returnValues.data);
+              console.log(depositContractCalldata.pubkey.slice(2));
+              console.log(
+                (eventLog.returnValues.data as string).includes(
+                  depositContractCalldata.pubkey.slice(2),
+                ),
+              );
 
-        const logs = await depositAdapterContract.getPastEvents('Deposit');
+              return (eventLog.returnValues.data as string).includes(
+                depositContractCalldata.pubkey.slice(2),
+              );
+            }) as EventLog[];
 
-        logs.forEach((log) => {
-          const eventLog = log as EventLog;
-          if (
-            eventLog.transactionHash?.toLowerCase() === transactionHash?.toLowerCase()
-          ) {
-            const logReturnValues =
-              eventLog.returnValues as unknown as DepositLogReturnValues;
-            setLogCompareData({
-              originDomainID: getDomainID(networkChainId),
-              depositNonce: logReturnValues.depositNonce,
-            });
-            setSteps(TX_STEPS.SendingFunds);
-          }
-        });
+            if (log.length) {
+              setLogCompareData({
+                originDomainID: getDomainID(networkChainId),
+                depositNonce: log[0].returnValues.depositNonce as bigint,
+              });
+              setSteps(TX_STEPS.SendingFunds);
+            }
+          })();
+        }, 5000);
+        return () => clearInterval(interval1);
       }
 
       // TODO - improve either with contract.events, or maybe axios.get(`${BEACONCHAIN_URL}/api/v1/validator/${pubkeys.join(',',)}/deposits`)
@@ -86,32 +88,24 @@ export function Transactions(): JSX.Element {
             },
           );
 
-        // const events = goerliBridgeContract.events.ProposalExecution();
-        // events.on('data', (log) => {
-        //   const pastLog = log as EventLog;
-        //   if (pastLog.returnValues.depositNonce == logCompareData?.depositNonce && pastLog.returnValues.originDomainID == logCompareData?.originDomainID) {
-        //     setSteps(TX_STEPS.Success);
-        //   }
-        // });
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        const interval = setInterval(async () => {
-          const pastEvents = await goerliBridgeContract.getPastEvents(
-            'ProposalExecution',
-          );
-          pastEvents.forEach((log) => {
-            const pastLog = log as EventLog;
-            if (
-              pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
-              pastLog.returnValues.originDomainID == logCompareData?.originDomainID
-            ) {
-              setSteps(TX_STEPS.Success);
-              return () => clearInterval(interval);
-            } else {
-              return () => clearInterval(interval);
-            }
-          });
+        const interval2 = setInterval(() => {
+          void (async () => {
+            const pastEvents = await goerliBridgeContract.getPastEvents(
+              'ProposalExecution',
+            );
+            pastEvents.forEach((log) => {
+              const pastLog = log as EventLog;
+              if (
+                pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
+                pastLog.returnValues.originDomainID == logCompareData?.originDomainID
+              ) {
+                setSteps(TX_STEPS.Success);
+              }
+            });
+          })();
         }, 1000 * 5);
-        return () => clearInterval(interval);
+        return () => clearInterval(interval2);
       }
     })();
   }, [steps]);

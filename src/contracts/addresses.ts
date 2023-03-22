@@ -1,7 +1,5 @@
 import { ensureEnv } from '../utils/ensureEnv';
 
-//CONTRACT ADDRESSES
-
 export const DEPOSIT_ADAPTER_TARGET = ensureEnv(
   'DEPOSIT_ADAPTER_TARGET',
   '0xBdeebC18CBE64a09E4Da0bC82cfFB6AC5261F9A8',

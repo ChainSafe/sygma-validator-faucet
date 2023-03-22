@@ -4,7 +4,13 @@ import { DepositKeyInterface } from '../components/JSONDropzone/validation';
 
 interface Data {
   json?: DepositKeyInterface;
-  txReceiptHash?: string;
+  depositContractCalldata?: {
+    pubkey: string;
+    withdrawal_credentials: string;
+    signature: string;
+    deposit_data_root: string;
+  };
+  depositContractCalldataEncoded?: string;
 }
 
 interface StorageContextContextInterface {

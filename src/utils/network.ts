@@ -60,13 +60,10 @@ export const getBridgeAddress = (networkChainId: NetworksChainID): string => {
   switch (networkChainId) {
     case NetworksChainID.GOERLI:
       return BRIDGE_ADDRESS_GOERLI;
-      break;
     case NetworksChainID.MOONBASE:
       return BRIDGE_ADDRESS_MOONBASE;
-      break;
     case NetworksChainID.MUMBAI:
       return BRIDGE_ADDRESS_MUMBAI;
-      break;
     default:
       throw new Error(`Bridge contract not available for networkChainId`);
   }
@@ -77,13 +74,10 @@ export const getDomainID = (networkChainId: bigint): bigint => {
   switch (chainIdHex) {
     case NetworksChainID.GOERLI:
       return 1n;
-      break;
     case NetworksChainID.MOONBASE:
       return 2n;
-      break;
     case NetworksChainID.MUMBAI:
       return 3n;
-      break;
     default:
       throw new Error(`There is no DomainID for that networkChainId`);
   }
