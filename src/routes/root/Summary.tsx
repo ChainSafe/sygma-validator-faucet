@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { Contract } from 'web3';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
@@ -14,10 +13,6 @@ import { useStorage } from '../../context/StorageContext';
 import checkmark from '../../assets/icons/checkmark.svg';
 import { ButtonStyled } from '../../components/Button/Button';
 import { useBasicFee } from '../../hooks/useBasicFee';
-
-// mocks
-const value = '{value}';
-const currency = '{currency}';
 
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
@@ -34,13 +29,14 @@ export function Summary(): JSX.Element {
     if (!selectedNetwork || !storage.data.json) return;
 
     const accounts = await wallet.web3.eth.getAccounts();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    // @ts-ignore
-    const depositAdapterContract: Contract<typeof DepositAdapterABI> =
-      new wallet.web3.eth.Contract(DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN, {
+    const depositAdapterContract = new wallet.web3.eth.Contract(
+      DepositAdapterABI,
+      DEPOSIT_ADAPTER_ORIGIN,
+      {
         from: accounts[0],
         provider: wallet.web3.provider,
-      });
+      },
+    );
     const depositDataJSON: DepositDataJSON = storage.data.json;
 
     const depositContractCalldata = wallet.web3.eth.abi.encodeParameters(
@@ -62,18 +58,21 @@ export function Summary(): JSX.Element {
       },
       depositContractCalldataEncoded: depositContractCalldata,
     });
+
     //check for manually chainged network before calling contract method
     if (wallet.chainId !== selectedNetwork) {
-      setSelectedNetwork(null),
+      const isSwitched = await wallet.ensureNetwork(selectedNetwork);
+      if (!isSwitched) {
+        setSelectedNetwork(null);
         setErrorMsg(
           'Selected network does not match network in provider, select network again before contract call',
         );
-      return;
+        return;
+      }
     }
 
     try {
       //read deposit fee from contract
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const depositFee = await depositAdapterContract.methods._depositFee().call();
       const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee);
 
@@ -115,41 +114,40 @@ export function Summary(): JSX.Element {
       </Header>
       <Wrapper>
         <h2>Chose network:</h2>
-        {/* eslint-disable @typescript-eslint/no-misused-promises */}
         <ButtonWrapper>
           <ButtonSelectNetwork
-            onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MOONBASE)}
-            variant={'primary'}
+            onClick={(): void => void handleChooseNetwork(NetworksChainID.MOONBASE)}
+            variant="primary"
           >
             MOONBASE
             {selectedNetwork === NetworksChainID.MOONBASE && (
-              <CheckmarkIcon src={checkmark} alt={'selected network Moonbase'} />
+              <CheckmarkIcon src={checkmark} alt="selected network Moonbase" />
             )}
           </ButtonSelectNetwork>
           <ButtonSelectNetwork
-            variant={'primary'}
-            onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MUMBAI)}
+            variant="primary"
+            onClick={(): void => void handleChooseNetwork(NetworksChainID.MUMBAI)}
           >
             MUMBAI
             {selectedNetwork === NetworksChainID.MUMBAI && (
-              <CheckmarkIcon src={checkmark} alt={'selected network Moonbase'} />
+              <CheckmarkIcon src={checkmark} alt="selected network Moonbase" />
             )}
           </ButtonSelectNetwork>
         </ButtonWrapper>
         {errorMsg && <p>{errorMsg}</p>}
         {selectedNetwork && (
           <InfoBox>
-            You’re about to launch a validator on Goerli with {value} {currency} from{' '}
+            You’re about to launch a validator on Goerli{' '}
             <b>{getNetwork(selectedNetwork).chainName}</b>. Is that correct?
           </InfoBox>
         )}
         <ButtonWrapper>
           {selectedNetwork && (
-            <Button variant={'primary'} onClick={handleBridgeClick}>
+            <Button variant="primary" onClick={(): void => void handleBridgeClick()}>
               Bridge Funds
             </Button>
           )}
-          <Button variant={'secondary'} onClick={handleBackClick}>
+          <Button variant="secondary" onClick={handleBackClick}>
             Back
           </Button>
         </ButtonWrapper>
