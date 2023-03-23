@@ -114,10 +114,7 @@ export function Transactions(): JSX.Element {
   return (
     <>
       <Heading>Step 4: Transactions</Heading>
-      <ProgressSteps />
-      <h1>{steps === 0 && 'Initializig'} </h1>
-      <h1>{steps === 1 && 'Sending funds... Please accept network change to Goerli'} </h1>
-      <h1>{steps === 2 && 'Success'} </h1>
+      <ProgressSteps step={steps} />
     </>
   );
 }
