@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Contract } from 'web3';
 import { EventLog } from 'web3-eth-contract';
 import { Heading } from '../../components/Heading';
+import ProgressSteps from '../../components/ProgressSteps/ProgressSteps';
 import { useStorage } from '../../context/StorageContext';
 import { useEnsuredWallet } from '../../context/WalletContext';
 import { bridgeABI } from '../../contracts';
@@ -113,6 +114,7 @@ export function Transactions(): JSX.Element {
   return (
     <>
       <Heading>Step 4: Transactions</Heading>
+      <ProgressSteps />
       <h1>{steps === 0 && 'Initializig'} </h1>
       <h1>{steps === 1 && 'Sending funds... Please accept network change to Goerli'} </h1>
       <h1>{steps === 2 && 'Success'} </h1>

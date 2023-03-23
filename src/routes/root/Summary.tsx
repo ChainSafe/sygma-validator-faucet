@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Contract } from 'web3';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
@@ -11,6 +11,8 @@ import AccountInfo from '../../components/AccountInfo/AccountInfo';
 import { InfoBox } from '../../components/lib';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
+import checkmark from '../../assets/icons/checkmark.svg';
+import { ButtonStyled } from '../../components/Button/Button';
 import { useBasicFee } from '../../hooks/useBasicFee';
 
 // mocks
@@ -115,18 +117,24 @@ export function Summary(): JSX.Element {
         <h2>Chose network:</h2>
         {/* eslint-disable @typescript-eslint/no-misused-promises */}
         <ButtonWrapper>
-          <Button
+          <ButtonSelectNetwork
             onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MOONBASE)}
             variant={'primary'}
           >
-            MOONBASE {selectedNetwork === NetworksChainID.MOONBASE && 'is selected'}
-          </Button>
-          <Button
+            MOONBASE
+            {selectedNetwork === NetworksChainID.MOONBASE && (
+              <CheckmarkIcon src={checkmark} alt={'selected network Moonbase'} />
+            )}
+          </ButtonSelectNetwork>
+          <ButtonSelectNetwork
             variant={'primary'}
             onClick={(): Promise<void> => handleChooseNetwork(NetworksChainID.MUMBAI)}
           >
-            MUMBAI {selectedNetwork === NetworksChainID.MUMBAI && 'is selected'}
-          </Button>
+            MUMBAI
+            {selectedNetwork === NetworksChainID.MUMBAI && (
+              <CheckmarkIcon src={checkmark} alt={'selected network Moonbase'} />
+            )}
+          </ButtonSelectNetwork>
         </ButtonWrapper>
         {errorMsg && <p>{errorMsg}</p>}
         {selectedNetwork && (
@@ -172,4 +180,23 @@ const ButtonWrapper = styled.div`
   margin-top: 21px;
   display: flex;
   justify-content: space-evenly;
+`;
+
+const ButtonSelectNetwork = styled(ButtonStyled)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 5px 32px;
+
+  img {
+    position: absolute;
+    right: 8px;
+    top: 9px;
+  }
+`;
+
+const CheckmarkIcon = styled.img`
+  width: 18px;
+  height: 18px;
 `;

@@ -1,16 +1,16 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import React from 'react';
 import { useStorage } from '../../context/StorageContext';
-import { Spinner } from '../../components/Spinner';
 import { useWallet } from '../../context/WalletContext';
 import { StepsNavigation } from '../../components/StepsNavigation/StepsNavigation';
+import Loader from '../../components/Loader/Loader';
 
 export function Root(): JSX.Element {
   const storage = useStorage();
   const wallet = useWallet();
   const location = useLocation();
 
-  if (!storage.isReady) return <Spinner />;
+  if (!storage.isReady) return <Loader />;
 
   if (
     ['/connect', '/summary', '/transactions'].some(
