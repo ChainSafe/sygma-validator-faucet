@@ -62,7 +62,6 @@ export function Transactions(): JSX.Element {
       if (steps === TX_STEPS.SendingFunds) {
         await wallet.ensureNetwork(NetworksChainID.GOERLI);
 
-        // @ts-ignore
         const goerliBridgeContract: Contract<typeof bridgeABI> =
           new wallet.web3.eth.Contract(
             bridgeABI,
