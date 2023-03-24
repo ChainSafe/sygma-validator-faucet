@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Contract } from 'web3';
-import { EventLog } from 'web3-eth-contract';
+import { Contract, eth } from 'web3';
 import { Heading } from '../../components/Heading';
 import ProgressSteps from '../../components/ProgressSteps/ProgressSteps';
 import { useStorage } from '../../context/StorageContext';
@@ -44,7 +43,7 @@ export function Transactions(): JSX.Element {
                 if (typeof log === 'string' || typeof log.returnValues.data !== 'string')
                   return false;
                 return log.returnValues.data.includes(depositContractCalldata.pubkey);
-              }) as EventLog[];
+              }) as eth.contract.EventLog[];
               if (filteredLog.length)
                 resolve(filteredLog[0].returnValues.depositNonce as bigint);
               clearInterval(originInterval);
@@ -77,7 +76,7 @@ export function Transactions(): JSX.Element {
               'ProposalExecution',
             );
             pastEvents.forEach((log) => {
-              const pastLog = log as EventLog;
+              const pastLog = log as eth.contract.EventLog;
               if (
                 pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
                 pastLog.returnValues.originDomainID == logCompareData?.originDomainID
@@ -96,7 +95,7 @@ export function Transactions(): JSX.Element {
               'FailedHandlerExecution',
             );
             pastEvents.forEach((log) => {
-              const pastLog = log as EventLog;
+              const pastLog = log as eth.contract.EventLog;
               if (
                 pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
                 pastLog.returnValues.originDomainID == logCompareData?.originDomainID
