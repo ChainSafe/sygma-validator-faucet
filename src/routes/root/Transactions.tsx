@@ -12,6 +12,7 @@ enum TX_STEPS {
   Initializig,
   SendingFunds,
   Success,
+  Faliure,
 }
 
 export function Transactions(): JSX.Element {
@@ -27,70 +28,50 @@ export function Transactions(): JSX.Element {
   useEffect(() => {
     void (async () => {
       if (steps === TX_STEPS.Initializig) {
-        const accounts = await wallet.web3.eth.getAccounts();
-        const networkChainId = await wallet.web3.eth.getChainId();
-
-        // @ts-ignore
-        const originBridgeContract: Contract<typeof bridgeABI> =
-          new wallet.web3.eth.Contract(
-            bridgeABI,
-            getBridgeAddress(wallet.web3.utils.toHex(networkChainId) as NetworksChainID),
-            {
-              from: accounts[0],
-              provider: wallet.web3.provider,
-            },
-          );
+        const bridgeAddress = getBridgeAddress(wallet.chainId as NetworksChainID);
         const { depositContractCalldata } = storage.data;
+
         if (!depositContractCalldata) return;
-        const interval1 = setInterval(() => {
-          void (async () => {
-            const logs = await originBridgeContract.getPastEvents('Deposit');
-            const log = logs.filter((log) => {
-              const eventLog = log as EventLog;
-              console.log(eventLog.returnValues.data);
-              console.log(depositContractCalldata.pubkey.slice(2));
-              console.log(
-                (eventLog.returnValues.data as string).includes(
-                  depositContractCalldata.pubkey.slice(2),
-                ),
-              );
+        const originBridgeContract = new wallet.web3.eth.Contract(
+          bridgeABI,
+          bridgeAddress,
+        );
 
-              return (eventLog.returnValues.data as string).includes(
-                depositContractCalldata.pubkey.slice(2),
-              );
-            }) as EventLog[];
+        const nonce: bigint = await new Promise((resolve) => {
+          const originInterval = setInterval(() => {
+            void originBridgeContract.getPastEvents('Deposit').then((logs) => {
+              const filteredLog = logs.filter((log) => {
+                if (typeof log === 'string' || typeof log.returnValues.data !== 'string')
+                  return false;
+                return log.returnValues.data.includes(depositContractCalldata.pubkey);
+              }) as EventLog[];
+              if (filteredLog.length)
+                resolve(filteredLog[0].returnValues.depositNonce as bigint);
+              clearInterval(originInterval);
+            });
+          }, 1000 * 5);
+        });
 
-            if (log.length) {
-              setLogCompareData({
-                originDomainID: getDomainID(networkChainId),
-                depositNonce: log[0].returnValues.depositNonce as bigint,
-              });
-              setSteps(TX_STEPS.SendingFunds);
-            }
-          })();
-        }, 5000);
-        return () => clearInterval(interval1);
+        setLogCompareData({
+          originDomainID: getDomainID(wallet.chainId),
+          depositNonce: nonce,
+        });
+        setSteps(TX_STEPS.SendingFunds);
       }
 
       // TODO - improve either with contract.events, or maybe axios.get(`${BEACONCHAIN_URL}/api/v1/validator/${pubkeys.join(',',)}/deposits`)
       if (steps === TX_STEPS.SendingFunds) {
         await wallet.ensureNetwork(NetworksChainID.GOERLI);
 
-        const accounts = await wallet.web3.eth.getAccounts();
-
         // @ts-ignore
         const goerliBridgeContract: Contract<typeof bridgeABI> =
           new wallet.web3.eth.Contract(
             bridgeABI,
             getBridgeAddress(NetworksChainID.GOERLI),
-            {
-              from: accounts[0],
-              provider: wallet.web3.provider,
-            },
           );
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        const interval2 = setInterval(() => {
+        const successInterval = setInterval(() => {
           void (async () => {
             const pastEvents = await goerliBridgeContract.getPastEvents(
               'ProposalExecution',
@@ -102,11 +83,31 @@ export function Transactions(): JSX.Element {
                 pastLog.returnValues.originDomainID == logCompareData?.originDomainID
               ) {
                 setSteps(TX_STEPS.Success);
+                clearInterval(successInterval);
+                clearInterval(failedInterval);
               }
             });
           })();
         }, 1000 * 5);
-        return () => clearInterval(interval2);
+
+        const failedInterval = setInterval(() => {
+          void (async () => {
+            const pastEvents = await goerliBridgeContract.getPastEvents(
+              'FailedHandlerExecution',
+            );
+            pastEvents.forEach((log) => {
+              const pastLog = log as EventLog;
+              if (
+                pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
+                pastLog.returnValues.originDomainID == logCompareData?.originDomainID
+              ) {
+                setSteps(TX_STEPS.Faliure);
+                clearInterval(failedInterval);
+                clearInterval(successInterval);
+              }
+            });
+          })();
+        }, 1000 * 5);
       }
     })();
   }, [steps]);
@@ -114,7 +115,11 @@ export function Transactions(): JSX.Element {
   return (
     <>
       <Heading>Step 4: Transactions</Heading>
-      <ProgressSteps step={steps} />
+      {steps < TX_STEPS.Faliure ? (
+        <ProgressSteps step={steps} />
+      ) : (
+        <p>Could not launch a validator on Goerli</p>
+      )}
     </>
   );
 }

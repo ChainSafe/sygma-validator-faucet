@@ -1,4 +1,3 @@
-import web3 from 'web3/lib/web3';
 import {
   BRIDGE_ADDRESS_GOERLI,
   BRIDGE_ADDRESS_MOONBASE,
@@ -69,8 +68,7 @@ export const getBridgeAddress = (networkChainId: NetworksChainID): string => {
   }
 };
 
-export const getDomainID = (networkChainId: bigint): bigint => {
-  const chainIdHex = web3.utils.toHex(networkChainId) as NetworksChainID;
+export const getDomainID = (chainIdHex: string): bigint => {
   switch (chainIdHex) {
     case NetworksChainID.GOERLI:
       return 1n;

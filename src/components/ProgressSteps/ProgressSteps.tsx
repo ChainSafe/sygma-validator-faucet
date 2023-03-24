@@ -16,6 +16,7 @@ export function ProgressSteps({ step }: Props): JSX.Element {
         description="You are in the deposit queue"
         isCompleted={step >= 2}
       />
+      <ProgressStep value="4/4" description="Success" isCompleted={step == 2} />
     </ProgressStepsWrapper>
   );
 }

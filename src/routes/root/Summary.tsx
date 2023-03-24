@@ -37,26 +37,30 @@ export function Summary(): JSX.Element {
         provider: wallet.web3.provider,
       },
     );
-    const depositDataJSON: DepositDataJSON = storage.data.json;
+    const {
+      pubkey,
+      withdrawal_credentials,
+      signature,
+      deposit_data_root,
+    }: DepositDataJSON = storage.data.json;
 
     const depositContractCalldata = wallet.web3.eth.abi.encodeParameters(
       ['bytes', 'bytes', 'bytes', 'bytes32'],
       [
-        `0x${depositDataJSON.pubkey}`,
-        `0x${depositDataJSON.withdrawal_credentials}`,
-        `0x${depositDataJSON.signature}`,
-        `0x${depositDataJSON.deposit_data_root}`,
+        `0x${pubkey}`,
+        `0x${withdrawal_credentials}`,
+        `0x${signature}`,
+        `0x${deposit_data_root}`,
       ],
     );
 
     storage.update({
       depositContractCalldata: {
-        pubkey: `0x${depositDataJSON.pubkey}`,
-        withdrawal_credentials: `0x${depositDataJSON.withdrawal_credentials}`,
-        signature: `0x${depositDataJSON.signature}`,
-        deposit_data_root: `0x${depositDataJSON.deposit_data_root}`,
+        pubkey,
+        withdrawal_credentials,
+        signature,
+        deposit_data_root,
       },
-      depositContractCalldataEncoded: depositContractCalldata,
     });
 
     //check for manually chainged network before calling contract method

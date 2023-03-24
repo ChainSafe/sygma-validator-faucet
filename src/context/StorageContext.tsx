@@ -10,7 +10,6 @@ interface Data {
     signature: string;
     deposit_data_root: string;
   };
-  depositContractCalldataEncoded?: string;
 }
 
 interface StorageContextContextInterface {
