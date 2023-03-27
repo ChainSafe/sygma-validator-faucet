@@ -1,5 +1,11 @@
+import {
+  BRIDGE_ADDRESS_GOERLI,
+  BRIDGE_ADDRESS_MOONBASE,
+  BRIDGE_ADDRESS_MUMBAI,
+} from '../contracts/addresses';
+
 export interface Network {
-  chainId: string; // A 0x-prefixed hexadecimal string
+  chainId: NetworksChainID; // A 0x-prefixed hexadecimal string
   chainName: string;
   nativeCurrency: {
     name: string;
@@ -9,9 +15,15 @@ export interface Network {
   rpcUrls: string[];
 }
 
+export enum NetworksChainID {
+  GOERLI = '0x5',
+  MOONBASE = '0x507',
+  MUMBAI = '0x13881',
+}
+
 export const networks: Network[] = [
   {
-    chainId: '0x507',
+    chainId: NetworksChainID.MOONBASE,
     chainName: 'Moonbase Alpha',
     nativeCurrency: {
       name: 'Moonbase DEV',
@@ -21,7 +33,7 @@ export const networks: Network[] = [
     rpcUrls: ['https://rpc.api.moonbase.moonbeam.network'],
   },
   {
-    chainId: '0x13881',
+    chainId: NetworksChainID.MUMBAI,
     chainName: 'Mumbai',
     nativeCurrency: {
       name: 'Mumbai DEV',
@@ -43,7 +55,28 @@ export function getNetwork(chainId: string): Network {
   }
 }
 
-export enum Networks {
-  MOONBASE = '0x507',
-  MUMBAI = '0x13881',
-}
+export const getBridgeAddress = (networkChainId: NetworksChainID): string => {
+  switch (networkChainId) {
+    case NetworksChainID.GOERLI:
+      return BRIDGE_ADDRESS_GOERLI;
+    case NetworksChainID.MOONBASE:
+      return BRIDGE_ADDRESS_MOONBASE;
+    case NetworksChainID.MUMBAI:
+      return BRIDGE_ADDRESS_MUMBAI;
+    default:
+      throw new Error(`Bridge contract not available for networkChainId`);
+  }
+};
+
+export const getDomainID = (chainIdHex: string): bigint => {
+  switch (chainIdHex) {
+    case NetworksChainID.GOERLI:
+      return 1n;
+    case NetworksChainID.MOONBASE:
+      return 2n;
+    case NetworksChainID.MUMBAI:
+      return 3n;
+    default:
+      throw new Error(`There is no DomainID for that networkChainId`);
+  }
+};

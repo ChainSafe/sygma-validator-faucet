@@ -124,7 +124,6 @@ export function WalletContextProvider({ children }: PropsWithChildren): JSX.Elem
     if (network === chainId) return true;
     const provider = web3.currentProvider;
 
-    console.log('before switch');
     try {
       await provider.request({
         method: 'wallet_switchEthereumChain',
