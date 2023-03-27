@@ -58,7 +58,6 @@ export function Transactions(): JSX.Element {
         setSteps(TX_STEPS.SendingFunds);
       }
 
-      // TODO - improve either with contract.events, or maybe axios.get(`${BEACONCHAIN_URL}/api/v1/validator/${pubkeys.join(',',)}/deposits`)
       if (steps === TX_STEPS.SendingFunds) {
         await wallet.ensureNetwork(NetworksChainID.GOERLI);
 

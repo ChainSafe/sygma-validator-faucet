@@ -7,7 +7,6 @@ import {
   DepositKeyInterface,
   DepositStatus,
   TransactionStatus,
-  getExistingDepositsForPubkeys,
   validateDepositKey,
 } from './validation';
 
@@ -53,7 +52,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
 
       const reader = new FileReader();
 
-      reader.onload = async (event) => {
+      reader.onload = (event) => {
         if (event.target) {
           try {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -67,38 +66,18 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                 transactionStatus: TransactionStatus.READY,
                 depositStatus: DepositStatus.VERIFYING,
               });
-
-              // perform double deposit check
-              try {
-                const existingDeposits = await getExistingDepositsForPubkeys(fileData);
-                const existingDepositPubkeys = existingDeposits.data.flatMap((x) =>
-                  x.publickey.substring(2),
-                );
-                if (existingDepositPubkeys.includes(fileData[0].pubkey)) {
-                  setDepositFileKey({
-                    ...fileData[0],
-                    transactionStatus: TransactionStatus.READY,
-                    depositStatus: DepositStatus.ALREADY_DEPOSITED,
-                  });
-                  handlePubKeyAlreadyDeposited();
-                } else {
-                  //Check of withdrawal credentials match goerli contract address
-                  if (
-                    `0x${fileData[0].withdrawal_credentials.substring(
-                      24,
-                    )}`.toLowerCase() === DEPOSIT_ADAPTER_TARGET.toLowerCase()
-                  ) {
-                    setDepositFileKey({
-                      ...fileData[0],
-                      transactionStatus: TransactionStatus.READY,
-                      depositStatus: DepositStatus.READY_FOR_DEPOSIT,
-                    });
-                  } else {
-                    handleWithdrawalAddressNotMatching();
-                  }
-                }
-              } catch (error) {
-                handleSevereError();
+              //Check of withdrawal credentials match goerli contract address
+              if (
+                `0x${fileData[0].withdrawal_credentials.substring(24)}`.toLowerCase() ===
+                DEPOSIT_ADAPTER_TARGET.toLowerCase()
+              ) {
+                setDepositFileKey({
+                  ...fileData[0],
+                  transactionStatus: TransactionStatus.READY,
+                  depositStatus: DepositStatus.READY_FOR_DEPOSIT,
+                });
+              } else {
+                handleWithdrawalAddressNotMatching();
               }
             } else {
               // file is JSON but did not pass BLS, so leave it "staged" but not "accepted"
@@ -197,10 +176,6 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
 
   const handleWithdrawalAddressNotMatching = (): void => {
     setFileError(<div>Withdrawal address doesn't match goerli contract address</div>);
-  };
-
-  const handlePubKeyAlreadyDeposited = (): void => {
-    setFileError(<div>Pubkey already deposited</div>);
   };
 
   const renderMessage = useMemo((): JSX.Element => {

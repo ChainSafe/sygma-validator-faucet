@@ -4,7 +4,6 @@
 import _every from 'lodash/every';
 import bls from '@chainsafe/bls/herumi';
 import compareVersions from 'compare-versions';
-import axios from 'axios';
 import {
   DepositData,
   DepositMessage,
@@ -19,7 +18,6 @@ import {
   MIN_DEPOSIT_AMOUNT,
   ETHER_TO_GWEI,
   MIN_DEPOSIT_CLI_VERSION,
-  BEACONCHAIN_URL,
 } from '../../utils/envVars';
 
 interface BeaconchainDepositDataInterface {
@@ -71,7 +69,6 @@ export enum TransactionStatus {
 
 export enum DepositStatus {
   VERIFYING,
-  ALREADY_DEPOSITED,
   READY_FOR_DEPOSIT,
 }
 
@@ -231,22 +228,4 @@ export const validateDepositKey = (files: DepositKeyInterface[]): boolean => {
     return verifySignature(depositDatum);
   });
   return _every(depositKeysStatuses);
-};
-
-export const getExistingDepositsForPubkeys = async (
-  files: DepositKeyInterface[],
-): Promise<BeaconchainDepositInterface> => {
-  const pubkeys = files.flatMap((x) => x.pubkey);
-  const beaconScanUrl = `${BEACONCHAIN_URL}/api/v1/validator/${pubkeys.join(
-    ',',
-  )}/deposits`;
-
-  const { data: beaconScanCheck } = await axios.get<BeaconchainDepositInterface>(
-    beaconScanUrl,
-  );
-
-  if (!beaconScanCheck.data || beaconScanCheck.status !== 'OK') {
-    throw new Error('Beaconchain API is down');
-  }
-  return beaconScanCheck;
 };
