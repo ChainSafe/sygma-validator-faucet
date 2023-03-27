@@ -33,7 +33,6 @@ export const JSONDropzone: FC<JSONDropzone> = ({
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
-  const storage = useStorage();
 
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>('');
