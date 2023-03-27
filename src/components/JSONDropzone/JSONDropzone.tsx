@@ -21,18 +21,14 @@ import {
 interface JSONDropzone {
   JSONReady: (deposit: DepositKeyInterface) => void;
   fileNameReady: (fileName: string) => void;
-  resetStorageData: () => void;
 }
 
-export const JSONDropzone: FC<JSONDropzone> = ({
-  JSONReady,
-  fileNameReady,
-  resetStorageData,
-}) => {
+export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => {
   //component state
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
+  const storage = useStorage();
 
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>('');
@@ -159,7 +155,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({
       setFileError(null);
       setIsFileStaged(false);
       setIsFileAccepted(false);
-      resetStorageData();
+      storage.reset();
       flushDropzoneCache();
     },
     [setDepositFileKey, setDepositFileName, flushDropzoneCache],

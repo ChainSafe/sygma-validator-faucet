@@ -48,11 +48,7 @@ export function Upload(): JSX.Element {
           Upload deposit_data.json, find it in your /staking-deposit-cli/validator_keys
           directory.
         </p>
-        <JSONDropzone
-          resetStorageData={storage.reset}
-          JSONReady={dispatchJSON}
-          fileNameReady={dispatchFileName}
-        />
+        <JSONDropzone JSONReady={dispatchJSON} fileNameReady={dispatchFileName} />
       </DropboxSection>
       <Button
         variant="secondary"
