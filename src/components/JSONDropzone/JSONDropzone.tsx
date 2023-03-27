@@ -1,8 +1,16 @@
-import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import { DEPOSIT_ADAPTER_TARGET } from '../../contracts';
 import { GENESIS_FORK_VERSION } from '../../utils/envVars';
+import { useStorage } from '../../context/StorageContext';
 import {
   DepositKeyInterface,
   DepositStatus,
@@ -13,13 +21,19 @@ import {
 interface JSONDropzone {
   JSONReady: (deposit: DepositKeyInterface) => void;
   fileNameReady: (fileName: string) => void;
+  resetStorageData: () => void;
 }
 
-export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => {
+export const JSONDropzone: FC<JSONDropzone> = ({
+  JSONReady,
+  fileNameReady,
+  resetStorageData,
+}) => {
   //component state
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
+  const storage = useStorage();
 
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>('');
@@ -117,12 +131,14 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const {
     acceptedFiles, // all JSON files will pass this check (including BLS failures
     inputRef,
-    // isDragActive,
-    // isDragAccept,
+    isFocused,
+    isDragActive,
+    isDragAccept,
     isDragReject,
     getRootProps,
     getInputProps,
   } = useDropzone({
+    multiple: false,
     accept: { 'application/json': ['.json'] },
     noClick: isFileStaged || isFileAccepted,
     onDrop: onFileDrop,
@@ -144,6 +160,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
       setFileError(null);
       setIsFileStaged(false);
       setIsFileAccepted(false);
+      resetStorageData();
       flushDropzoneCache();
     },
     [setDepositFileKey, setDepositFileName, flushDropzoneCache],
@@ -179,6 +196,14 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   };
 
   const renderMessage = useMemo((): JSX.Element => {
+    if (storage.data.json && !isFileStaged) {
+      return (
+        <>
+          <div>JSON file already uploaded. Continue or upload a new one</div>
+        </>
+      );
+    }
+
     if (isDragReject && !isFileStaged) {
       return <div>Upload a valid json file.</div>;
     }
@@ -211,28 +236,41 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
 
   return (
     <DropzoneWrapper
-      //TODO - style
-      // isFileStaged={isFileStaged}
-      // isFileAccepted={isFileAccepted && !fileError}
-      // {...getRootProps({ isDragActive, isDragAccept, isDragReject })}
-      {...getRootProps({ className: 'dropzone' })}
+      {...getRootProps({
+        className: 'dropzone',
+        isDragActive,
+        isFocused,
+        isDragAccept,
+        isDragReject,
+      })}
     >
       <input {...getInputProps()} />
-      {/* //TODO - style */}
-      {/* <FileUploadAnimation
-            isDragAccept={isDragAccept}
-            isDragReject={isDragReject}
-            isDragActive={isDragActive}
-            isFileStaged={!!(isFileStaged || fileError)}
-            isFileAccepted={isFileAccepted && !fileError}
-          /> */}
-
       <DropzoneMessage>{renderMessage}</DropzoneMessage>
     </DropzoneWrapper>
   );
 };
 
-const DropzoneWrapper = styled.div`
+type ColorProps = {
+  className: string;
+  isDragActive: boolean;
+  isDragAccept: boolean;
+  isDragReject: boolean;
+  isFocused: boolean;
+};
+const getColor = (props: ColorProps): string => {
+  if (props.isDragAccept) {
+    return 'var(--green)';
+  }
+  if (props.isDragReject) {
+    return 'var(--red)';
+  }
+  if (props.isFocused) {
+    return 'var(--orange)';
+  }
+  return 'var(--grey-500)';
+};
+
+const DropzoneWrapper = styled.div<ColorProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -241,7 +279,7 @@ const DropzoneWrapper = styled.div`
   height: 147px;
   border-radius: 12px;
   border-style: dashed;
-  border-color: var(--grey-500);
+  border-color: ${(props) => getColor(props)};
   margin: 10px 0 30px 0;
   cursor: grab;
 `;
