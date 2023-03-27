@@ -78,7 +78,7 @@ export function Summary(): JSX.Element {
     try {
       //read deposit fee from contract
       const depositFee = await depositAdapterContract.methods._depositFee().call();
-      const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee);
+      const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee.toString());
 
       const value = depositFeeBigint + basicFee;
 
