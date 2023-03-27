@@ -35,7 +35,7 @@ export function useBasicFee(): [bigint] {
       ._fee()
       .call()
       .then((result) => {
-        setFee(utils.toBigInt(result));
+        setFee(utils.toBigInt(result.toString()));
       })
       .catch((error) => {
         console.error('useBasicFee error', error);
