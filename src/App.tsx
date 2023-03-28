@@ -58,5 +58,10 @@ const Main = styled.main`
 `;
 
 const RightColumn = styled.div`
+  display: none;
   background: var(--blue-900);
+
+  @media (min-width: ${breakpoints.screenMd}) {
+    display: block;
+  }
 `;
