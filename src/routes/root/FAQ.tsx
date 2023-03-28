@@ -65,7 +65,7 @@ export const FAQ: FC = () => {
             Can I withdraw my testnet eth?
           </FaqQuestion>
           <FaqAnswer active={active.includes(4)}>
-            You will be able to withdraw your testnet Ether after{' '}
+            Yes, but only back to our contract.{' '}
             <Link
               target="_blank"
               to="https://blog.ethereum.org/2023/03/08/goerli-shapella-announcement"
