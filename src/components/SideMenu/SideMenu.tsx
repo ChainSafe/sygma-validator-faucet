@@ -12,11 +12,11 @@ export function SideMenu(): JSX.Element {
         <ProjectName>Testnet Validator Launchpad</ProjectName>
       </ProjectIconWrapper>
       <nav>
-        <MenuItem href={'#'}>
+        <MenuItem href={'/'}>
           <img src={chestIcon} alt="chest icon" />
           Home
         </MenuItem>
-        <MenuItem href={'#'}>
+        <MenuItem href={'/faq'}>
           <img src={heartIcon} alt="FAQ" />
           FAQ
         </MenuItem>
