@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { App } from '../App';
-import { ConnectWallet, Root, Summary, Transactions, Upload } from './root';
+import { ConnectWallet, Root, Summary, Transactions, Upload, FAQ } from './root';
 import ErrorPage from './ErrorPage';
 
 export const router = createBrowserRouter([
@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
             element: <Transactions />,
           },
         ],
+      },
+      {
+        path: '/faq',
+        element: <FAQ />,
       },
     ],
   },
