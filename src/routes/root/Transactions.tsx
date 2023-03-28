@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Contract, eth } from 'web3';
+import { Contract, eth, utils } from 'web3';
 import { Heading } from '../../components/Heading';
 import ProgressSteps from '../../components/ProgressSteps/ProgressSteps';
 import { useStorage } from '../../context/StorageContext';
@@ -75,9 +75,21 @@ export function Transactions(): JSX.Element {
             );
             pastEvents.forEach((log) => {
               const pastLog = log as eth.contract.EventLog;
+              const logDepositNonce = utils.toBigInt(
+                (pastLog.returnValues.depositNonce as string).toString(),
+              );
+              const sentTxDepositNonce = utils.toBigInt(
+                logCompareData?.depositNonce.toString(),
+              );
+              const logOriginDomainID = utils.toBigInt(
+                (pastLog.returnValues.originDomainID as string).toString(),
+              );
+              const sentTxOriginDomainID = utils.toBigInt(
+                logCompareData?.originDomainID.toString(),
+              );
               if (
-                pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
-                pastLog.returnValues.originDomainID == logCompareData?.originDomainID
+                logDepositNonce == sentTxDepositNonce &&
+                logOriginDomainID == sentTxOriginDomainID
               ) {
                 setSteps(TX_STEPS.Success);
                 clearInterval(successInterval);
