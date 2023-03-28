@@ -1,13 +1,20 @@
-import { FC, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 import { DEPOSIT_ADAPTER_TARGET } from '../../contracts';
 import { GENESIS_FORK_VERSION } from '../../utils/envVars';
+import { useStorage } from '../../context/StorageContext';
 import {
   DepositKeyInterface,
   DepositStatus,
   TransactionStatus,
-  getExistingDepositsForPubkeys,
   validateDepositKey,
 } from './validation';
 
@@ -21,6 +28,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
+  const storage = useStorage();
 
   //TODO app state - possibly store to context or redux
   const [depositFileName, setDepositFileName] = useState<string>('');
@@ -53,7 +61,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
 
       const reader = new FileReader();
 
-      reader.onload = async (event) => {
+      reader.onload = (event) => {
         if (event.target) {
           try {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -67,38 +75,18 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                 transactionStatus: TransactionStatus.READY,
                 depositStatus: DepositStatus.VERIFYING,
               });
-
-              // perform double deposit check
-              try {
-                const existingDeposits = await getExistingDepositsForPubkeys(fileData);
-                const existingDepositPubkeys = existingDeposits.data.flatMap((x) =>
-                  x.publickey.substring(2),
-                );
-                if (existingDepositPubkeys.includes(fileData[0].pubkey)) {
-                  setDepositFileKey({
-                    ...fileData[0],
-                    transactionStatus: TransactionStatus.READY,
-                    depositStatus: DepositStatus.ALREADY_DEPOSITED,
-                  });
-                  handlePubKeyAlreadyDeposited();
-                } else {
-                  //Check of withdrawal credentials match goerli contract address
-                  if (
-                    `0x${fileData[0].withdrawal_credentials.substring(
-                      24,
-                    )}`.toLowerCase() === DEPOSIT_ADAPTER_TARGET.toLowerCase()
-                  ) {
-                    setDepositFileKey({
-                      ...fileData[0],
-                      transactionStatus: TransactionStatus.READY,
-                      depositStatus: DepositStatus.READY_FOR_DEPOSIT,
-                    });
-                  } else {
-                    handleWithdrawalAddressNotMatching();
-                  }
-                }
-              } catch (error) {
-                handleSevereError();
+              //Check of withdrawal credentials match goerli contract address
+              if (
+                `0x${fileData[0].withdrawal_credentials.substring(24)}`.toLowerCase() ===
+                DEPOSIT_ADAPTER_TARGET.toLowerCase()
+              ) {
+                setDepositFileKey({
+                  ...fileData[0],
+                  transactionStatus: TransactionStatus.READY,
+                  depositStatus: DepositStatus.READY_FOR_DEPOSIT,
+                });
+              } else {
+                handleWithdrawalAddressNotMatching();
               }
             } else {
               // file is JSON but did not pass BLS, so leave it "staged" but not "accepted"
@@ -138,12 +126,14 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const {
     acceptedFiles, // all JSON files will pass this check (including BLS failures
     inputRef,
-    // isDragActive,
-    // isDragAccept,
+    isFocused,
+    isDragActive,
+    isDragAccept,
     isDragReject,
     getRootProps,
     getInputProps,
   } = useDropzone({
+    multiple: false,
     accept: { 'application/json': ['.json'] },
     noClick: isFileStaged || isFileAccepted,
     onDrop: onFileDrop,
@@ -165,6 +155,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
       setFileError(null);
       setIsFileStaged(false);
       setIsFileAccepted(false);
+      storage.reset();
       flushDropzoneCache();
     },
     [setDepositFileKey, setDepositFileName, flushDropzoneCache],
@@ -199,11 +190,15 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
     setFileError(<div>Withdrawal address doesn't match goerli contract address</div>);
   };
 
-  const handlePubKeyAlreadyDeposited = (): void => {
-    setFileError(<div>Pubkey already deposited</div>);
-  };
-
   const renderMessage = useMemo((): JSX.Element => {
+    if (storage.data.json && !isFileStaged) {
+      return (
+        <>
+          <div>JSON file already uploaded. Continue or upload a new one</div>
+        </>
+      );
+    }
+
     if (isDragReject && !isFileStaged) {
       return <div>Upload a valid json file.</div>;
     }
@@ -236,28 +231,41 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
 
   return (
     <DropzoneWrapper
-      //TODO - style
-      // isFileStaged={isFileStaged}
-      // isFileAccepted={isFileAccepted && !fileError}
-      // {...getRootProps({ isDragActive, isDragAccept, isDragReject })}
-      {...getRootProps({ className: 'dropzone' })}
+      {...getRootProps({
+        className: 'dropzone',
+        isDragActive,
+        isFocused,
+        isDragAccept,
+        isDragReject,
+      })}
     >
       <input {...getInputProps()} />
-      {/* //TODO - style */}
-      {/* <FileUploadAnimation
-            isDragAccept={isDragAccept}
-            isDragReject={isDragReject}
-            isDragActive={isDragActive}
-            isFileStaged={!!(isFileStaged || fileError)}
-            isFileAccepted={isFileAccepted && !fileError}
-          /> */}
-
       <DropzoneMessage>{renderMessage}</DropzoneMessage>
     </DropzoneWrapper>
   );
 };
 
-const DropzoneWrapper = styled.div`
+type ColorProps = {
+  className: string;
+  isDragActive: boolean;
+  isDragAccept: boolean;
+  isDragReject: boolean;
+  isFocused: boolean;
+};
+const getColor = (props: ColorProps): string => {
+  if (props.isDragAccept) {
+    return 'var(--green)';
+  }
+  if (props.isDragReject) {
+    return 'var(--red)';
+  }
+  if (props.isFocused) {
+    return 'var(--orange)';
+  }
+  return 'var(--grey-500)';
+};
+
+const DropzoneWrapper = styled.div<ColorProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -266,7 +274,7 @@ const DropzoneWrapper = styled.div`
   height: 147px;
   border-radius: 12px;
   border-style: dashed;
-  border-color: var(--grey-500);
+  border-color: ${(props) => getColor(props)};
   margin: 10px 0 30px 0;
   cursor: grab;
 `;

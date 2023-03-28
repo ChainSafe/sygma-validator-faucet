@@ -1,9 +1,9 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 interface Props {
   children: ReactNode;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
   variant: 'primary' | 'secondary';
   disabled?: boolean;
 }

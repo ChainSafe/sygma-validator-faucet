@@ -12,6 +12,8 @@ const GlobalStyles = createGlobalStyle`
     --grey-200: #c2cceb;
     --orange: #f37441;
     --white: #ffffff;
+    --red: #ff1744;
+    --green: #00e676;
 
     // Text variables
     --text-blue: var(--blue-500);

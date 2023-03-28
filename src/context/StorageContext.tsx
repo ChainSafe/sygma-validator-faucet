@@ -17,6 +17,7 @@ interface StorageContextContextInterface {
   isReady: boolean;
   load: () => void;
   update: (newData: Data) => void;
+  reset: () => void;
 }
 
 const defaultState: StorageContextContextInterface = {
@@ -24,6 +25,7 @@ const defaultState: StorageContextContextInterface = {
   isReady: false,
   load: () => {},
   update: () => {},
+  reset: () => {},
 };
 
 const StorageContext = createContext<StorageContextContextInterface>(defaultState);
@@ -47,13 +49,20 @@ export function StorageContextProvider({ children }: PropsWithChildren): JSX.Ele
     });
   };
 
+  const reset = (): void => {
+    setData(() => {
+      sessionStorage.removeItem(STORAGE_KEY);
+      return {};
+    });
+  };
+
   useEffect(() => {
     load();
     setIsReady(true);
   }, []);
 
   return (
-    <StorageContext.Provider value={{ data, isReady, load, update }}>
+    <StorageContext.Provider value={{ data, isReady, load, update, reset }}>
       {children}
     </StorageContext.Provider>
   );
