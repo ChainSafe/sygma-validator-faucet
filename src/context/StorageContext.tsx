@@ -52,7 +52,7 @@ export function StorageContextProvider({ children }: PropsWithChildren): JSX.Ele
   const reset = (): void => {
     setData(() => {
       sessionStorage.removeItem(STORAGE_KEY);
-      return { json: undefined, depositContractCalldata: undefined };
+      return {};
     });
   };
 
