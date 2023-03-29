@@ -10,7 +10,6 @@ import AccountInfo from '../../components/AccountInfo/AccountInfo';
 import { InfoBox } from '../../components/lib';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
-import checkmark from '../../assets/icons/checkmark.svg';
 import { ButtonStyled } from '../../components/Button/Button';
 import { useBasicFee } from '../../hooks/useBasicFee';
 
@@ -110,6 +109,11 @@ export function Summary(): JSX.Element {
     else setErrorMsg('To ensure selected network accept network switch prompt.');
   };
 
+  const handleButtonVariant = (chainId: NetworksChainID): 'primary' | 'secondary' => {
+    if (chainId === selectedNetwork) return 'primary';
+    else return 'secondary';
+  };
+
   return (
     <>
       <Header>
@@ -121,21 +125,15 @@ export function Summary(): JSX.Element {
         <ButtonWrapper>
           <ButtonSelectNetwork
             onClick={(): void => void handleChooseNetwork(NetworksChainID.MOONBASE)}
-            variant="primary"
+            variant={handleButtonVariant(NetworksChainID.MOONBASE)}
           >
             MOONBASE
-            {selectedNetwork === NetworksChainID.MOONBASE && (
-              <CheckmarkIcon src={checkmark} alt="selected network Moonbase" />
-            )}
           </ButtonSelectNetwork>
           <ButtonSelectNetwork
-            variant="primary"
+            variant={handleButtonVariant(NetworksChainID.MUMBAI)}
             onClick={(): void => void handleChooseNetwork(NetworksChainID.MUMBAI)}
           >
             MUMBAI
-            {selectedNetwork === NetworksChainID.MUMBAI && (
-              <CheckmarkIcon src={checkmark} alt="selected network Moonbase" />
-            )}
           </ButtonSelectNetwork>
         </ButtonWrapper>
         {errorMsg && <p>{errorMsg}</p>}
@@ -196,9 +194,4 @@ const ButtonSelectNetwork = styled(ButtonStyled)`
     right: 8px;
     top: 9px;
   }
-`;
-
-const CheckmarkIcon = styled.img`
-  width: 18px;
-  height: 18px;
 `;
