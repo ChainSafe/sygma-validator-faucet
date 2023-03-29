@@ -28,6 +28,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   const [isFileStaged, setIsFileStaged] = useState(false);
   const [isFileAccepted, setIsFileAccepted] = useState(false);
   const [fileError, setFileError] = useState<React.ReactElement | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const storage = useStorage();
 
   //TODO app state - possibly store to context or redux
@@ -58,7 +59,6 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
       setIsFileAccepted(true); // rejected if BLS check fails
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       setDepositFileName(jsonFiles[0].name as string);
-
       const reader = new FileReader();
 
       reader.onload = (event) => {
@@ -107,14 +107,15 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                 handleWrongNetwork();
               }
             }
-          } catch (e) {
-            // possible error example: json is invalid or empty so it cannot be parsed
-            // TODO think about other possible errors here, and consider if we might want to set "isFileStaged"
-            console.log(e);
+          } catch (err: Error | unknown) {
             setIsFileAccepted(false);
             handleSevereError();
             setDepositFileKey(undefined);
             flushDropzoneCache();
+
+            err instanceof Error
+              ? setError(err.message)
+              : setError('Drop component crashed. Please check your JSON data file.');
           }
         }
       };
@@ -228,6 +229,10 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
     depositFileName,
     handleFileDelete,
   ]);
+
+  if (error) {
+    throw new Error(error);
+  }
 
   return (
     <DropzoneWrapper
