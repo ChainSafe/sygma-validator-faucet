@@ -109,6 +109,11 @@ export function Summary(): JSX.Element {
     else setErrorMsg('To ensure selected network accept network switch prompt.');
   };
 
+  const handleButtonVariant = (chainId: NetworksChainID): 'primary' | 'secondary' => {
+    if (chainId === selectedNetwork) return 'primary';
+    else return 'secondary';
+  };
+
   return (
     <>
       <Header>
@@ -120,14 +125,12 @@ export function Summary(): JSX.Element {
         <ButtonWrapper>
           <ButtonSelectNetwork
             onClick={(): void => void handleChooseNetwork(NetworksChainID.MOONBASE)}
-            variant={
-              selectedNetwork === NetworksChainID.MOONBASE ? 'primary' : 'secondary'
-            }
+            variant={handleButtonVariant(NetworksChainID.MOONBASE)}
           >
             MOONBASE
           </ButtonSelectNetwork>
           <ButtonSelectNetwork
-            variant={selectedNetwork === NetworksChainID.MUMBAI ? 'primary' : 'secondary'}
+            variant={handleButtonVariant(NetworksChainID.MUMBAI)}
             onClick={(): void => void handleChooseNetwork(NetworksChainID.MUMBAI)}
           >
             MUMBAI
