@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Heading } from '../../components/Heading';
 import { JSONDropzone } from '../../components/JSONDropzone';
 import { Button } from '../../components/Button';
 import { DepositKeyInterface } from '../../components/JSONDropzone/validation';
 import { FlowActionTypes, FlowContext } from '../../context/FlowContext';
 import { useStorage } from '../../context/StorageContext';
+import FallbackGeneric from '../../components/FallbackError/FallbackGeneric';
 
 export function Upload(): JSX.Element {
   const navigate = useNavigate();
@@ -48,7 +50,9 @@ export function Upload(): JSX.Element {
           Upload deposit_data.json, find it in your /staking-deposit-cli/validator_keys
           directory.
         </p>
-        <JSONDropzone JSONReady={dispatchJSON} fileNameReady={dispatchFileName} />
+        <ErrorBoundary FallbackComponent={FallbackGeneric}>
+          <JSONDropzone JSONReady={dispatchJSON} fileNameReady={dispatchFileName} />
+        </ErrorBoundary>
       </DropboxSection>
       <Button
         variant="secondary"
