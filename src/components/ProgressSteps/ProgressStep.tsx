@@ -5,7 +5,7 @@ import Loader from '../Loader/Loader';
 
 type ProgressStepProps = {
   value: string;
-  description: string;
+  description: string | JSX.Element;
   isCompleted?: boolean;
 };
 
@@ -56,6 +56,14 @@ const ProgressStepState = styled.div`
 `;
 const ProgressStepText = styled.div`
   margin-left: 0.5rem;
+  display: flex;
+  justify-content: center;
+  svg {
+    margin-bottom: -6px;
+    path {
+      fill: #646cff;
+    }
+  }
 `;
 
 const ProgressStepIndicator = styled.div`

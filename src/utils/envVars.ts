@@ -1,7 +1,5 @@
 import { Buffer } from 'buffer';
 
-export const BEACONCHAIN_URL = 'https://goerli.beaconcha.in/';
-
 export const MIN_DEPOSIT_CLI_VERSION = '1.0.0';
 
 const forkVersion = Buffer.from('0x00001020'.replace(/0x/g, ''), 'hex');

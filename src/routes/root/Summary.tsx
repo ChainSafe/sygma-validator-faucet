@@ -4,8 +4,12 @@ import styled from 'styled-components';
 import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useEnsuredWallet } from '../../context/WalletContext';
-import { NetworksChainID, getNetwork } from '../../utils/network';
-import { DepositAdapterABI, DEPOSIT_ADAPTER_ORIGIN } from '../../contracts';
+import {
+  NetworksChainID,
+  getNetwork,
+  getDepositAdapterOriginAddress,
+} from '../../utils/network';
+import { DepositAdapterABI } from '../../contracts';
 import AccountInfo from '../../components/AccountInfo/AccountInfo';
 import { InfoBox } from '../../components/lib';
 import { DepositDataJSON } from '../../components/JSONDropzone/validation';
@@ -23,14 +27,13 @@ export function Summary(): JSX.Element {
 
   const [errorMsg, setErrorMsg] = useState<string>();
 
-  //TODO - improve code
   const handleBridgeClick = async (): Promise<void> => {
     if (!selectedNetwork || !storage.data.json) return;
 
     const accounts = await wallet.web3.eth.getAccounts();
     const depositAdapterContract = new wallet.web3.eth.Contract(
       DepositAdapterABI,
-      DEPOSIT_ADAPTER_ORIGIN,
+      getDepositAdapterOriginAddress(wallet.chainId),
       {
         from: accounts[0],
         provider: wallet.web3.provider,
@@ -78,7 +81,6 @@ export function Summary(): JSX.Element {
       //read deposit fee from contract
       const depositFee = await depositAdapterContract.methods._depositFee().call();
       const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee.toString());
-
       const value = depositFeeBigint + basicFee;
 
       const depositMethod = depositAdapterContract.methods.deposit(
@@ -135,6 +137,12 @@ export function Summary(): JSX.Element {
           >
             MUMBAI
           </ButtonSelectNetwork>
+          <ButtonSelectNetwork
+            variant={handleButtonVariant(NetworksChainID.SEPOLIA)}
+            onClick={(): void => void handleChooseNetwork(NetworksChainID.SEPOLIA)}
+          >
+            SEPOLIA
+          </ButtonSelectNetwork>
         </ButtonWrapper>
         {errorMsg && <p>{errorMsg}</p>}
         {selectedNetwork && (
@@ -143,15 +151,17 @@ export function Summary(): JSX.Element {
             <b>{getNetwork(selectedNetwork).chainName}</b>. Is that correct?
           </InfoBox>
         )}
-        <ButtonWrapper>
+        <ButtonWrapper className="bottom">
           {selectedNetwork && (
-            <Button variant="primary" onClick={(): void => void handleBridgeClick()}>
-              Bridge Funds
-            </Button>
+            <>
+              <Button variant="primary" onClick={(): void => void handleBridgeClick()}>
+                Bridge Funds
+              </Button>
+              <Button variant="secondary" onClick={handleBackClick}>
+                Back
+              </Button>
+            </>
           )}
-          <Button variant="secondary" onClick={handleBackClick}>
-            Back
-          </Button>
         </ButtonWrapper>
       </Wrapper>
     </>
@@ -177,9 +187,12 @@ const Header = styled.header`
 `;
 
 const ButtonWrapper = styled.div`
-  margin-top: 21px;
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
+  &.bottom {
+    flex-direction: row;
+  }
 `;
 
 const ButtonSelectNetwork = styled(ButtonStyled)`
@@ -188,10 +201,6 @@ const ButtonSelectNetwork = styled(ButtonStyled)`
   align-items: center;
   position: relative;
   padding: 5px 32px;
-
-  img {
-    position: absolute;
-    right: 8px;
-    top: 9px;
-  }
+  width: 150px;
+  margin: 5px;
 `;
