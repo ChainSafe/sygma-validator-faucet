@@ -5,7 +5,12 @@ import ProgressSteps from '../../components/ProgressSteps/ProgressSteps';
 import { useStorage } from '../../context/StorageContext';
 import { useEnsuredWallet } from '../../context/WalletContext';
 import { bridgeABI } from '../../contracts';
-import { getBridgeAddress, getDomainID, NetworksChainID } from '../../utils/network';
+import {
+  getBridgeAddress,
+  getDomainID,
+  getNetwork,
+  NetworksChainID,
+} from '../../utils/network';
 
 enum TX_STEPS {
   Initializig,
@@ -23,6 +28,8 @@ export function Transactions(): JSX.Element {
     originDomainID: bigint;
     depositNonce: bigint;
   } | null>(null);
+  const [depositUrl, setDepositUrl] = useState<string | undefined>();
+  const [proposalExecutionUrl, setProposalExecutionUrl] = useState<string | undefined>();
 
   useEffect(() => {
     void (async () => {
@@ -36,7 +43,11 @@ export function Transactions(): JSX.Element {
           bridgeAddress,
         );
 
-        const nonce: bigint = await new Promise((resolve) => {
+        type relevantLogData = {
+          nonce: bigint;
+          transactionHash?: string;
+        };
+        const depositLogData: relevantLogData = await new Promise((resolve) => {
           const originInterval = setInterval(() => {
             void originBridgeContract.getPastEvents('Deposit').then((logs) => {
               const filteredLog = logs.filter((log) => {
@@ -45,7 +56,10 @@ export function Transactions(): JSX.Element {
                 return log.returnValues.data.includes(depositContractCalldata.pubkey);
               }) as eth.contract.EventLog[];
               if (filteredLog.length)
-                resolve(filteredLog[0].returnValues.depositNonce as bigint);
+                resolve({
+                  nonce: filteredLog[0].returnValues.depositNonce as bigint,
+                  transactionHash: filteredLog[0].transactionHash,
+                });
               clearInterval(originInterval);
             });
           }, 1000 * 5);
@@ -53,8 +67,13 @@ export function Transactions(): JSX.Element {
 
         setLogCompareData({
           originDomainID: getDomainID(wallet.chainId),
-          depositNonce: nonce,
+          depositNonce: depositLogData.nonce,
         });
+        setDepositUrl(
+          `${getNetwork(wallet.chainId).blockExplorerUrl}tx/${
+            depositLogData.transactionHash || ''
+          }`,
+        );
         setSteps(TX_STEPS.SendingFunds);
       }
 
@@ -91,6 +110,9 @@ export function Transactions(): JSX.Element {
                 logDepositNonce == sentTxDepositNonce &&
                 logOriginDomainID == sentTxOriginDomainID
               ) {
+                setProposalExecutionUrl(
+                  `https://goerli.etherscan.io/tx/${pastLog.transactionHash || ''}`,
+                );
                 setSteps(TX_STEPS.Success);
                 clearInterval(successInterval);
                 clearInterval(failedInterval);
@@ -125,7 +147,11 @@ export function Transactions(): JSX.Element {
     <>
       <Heading>Step 4: Transactions</Heading>
       {steps < TX_STEPS.Faliure ? (
-        <ProgressSteps step={steps} />
+        <ProgressSteps
+          step={steps}
+          depositUrl={depositUrl}
+          proposalExecutionUrl={proposalExecutionUrl}
+        />
       ) : (
         <p>Could not launch a validator on Goerli</p>
       )}

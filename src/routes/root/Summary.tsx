@@ -27,7 +27,6 @@ export function Summary(): JSX.Element {
 
   const [errorMsg, setErrorMsg] = useState<string>();
 
-  //TODO - improve code
   const handleBridgeClick = async (): Promise<void> => {
     if (!selectedNetwork || !storage.data.json) return;
 
@@ -154,13 +153,15 @@ export function Summary(): JSX.Element {
         )}
         <ButtonWrapper className="bottom">
           {selectedNetwork && (
-            <Button variant="primary" onClick={(): void => void handleBridgeClick()}>
-              Bridge Funds
-            </Button>
+            <>
+              <Button variant="primary" onClick={(): void => void handleBridgeClick()}>
+                Bridge Funds
+              </Button>
+              <Button variant="secondary" onClick={handleBackClick}>
+                Back
+              </Button>
+            </>
           )}
-          <Button variant="secondary" onClick={handleBackClick}>
-            Back
-          </Button>
         </ButtonWrapper>
       </Wrapper>
     </>

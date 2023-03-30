@@ -16,6 +16,7 @@ export interface Network {
     decimals: 18;
   };
   rpcUrls: string[];
+  blockExplorerUrl: string;
 }
 
 export enum NetworksChainID {
@@ -35,6 +36,7 @@ export const networks: Network[] = [
       decimals: 18,
     },
     rpcUrls: ['https://rpc.api.moonbase.moonbeam.network'],
+    blockExplorerUrl: 'https://moonbase.moonscan.io/',
   },
   {
     chainId: NetworksChainID.MUMBAI,
@@ -45,6 +47,7 @@ export const networks: Network[] = [
       decimals: 18,
     },
     rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+    blockExplorerUrl: 'https://mumbai.polygonscan.com/',
   },
   {
     chainId: NetworksChainID.SEPOLIA,
@@ -55,6 +58,7 @@ export const networks: Network[] = [
       decimals: 18,
     },
     rpcUrls: ['https://rpc2.sepolia.org'],
+    blockExplorerUrl: 'https://sepolia.etherscan.io/',
   },
 ];
 
