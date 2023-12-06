@@ -39,8 +39,8 @@ export function Upload(): JSX.Element {
         Make sure to set "Withdrawal address" to
         <b>
           {' '}
-          {import.meta.env.REACT_APP_DESTINATION_CONTRACT ??
-            '0xbdeebc18cbe64a09e4da0bc82cffb6ac5261f9a8'}
+          {import.meta.env.REACT_APP_DEPOSIT_ADAPTER_TARGET ??
+            '0x6dA088adB96de645D4c4F769dB523BC0C8638aA9'}
         </b>
         . We are only funding validators that will return funds to our contract in case of
         voluntary exit!

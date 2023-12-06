@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 
 export const MIN_DEPOSIT_CLI_VERSION = '1.0.0';
 
-const forkVersion = Buffer.from('0x00001020'.replace(/0x/g, ''), 'hex');
+const forkVersion = Buffer.from('0x01017000'.replace(/0x/g, ''), 'hex');
 export const GENESIS_FORK_VERSION = forkVersion;
 
 // BLS signature verification variables

@@ -16,7 +16,7 @@ export function ConnectWallet(): JSX.Element {
       <Wrapper>
         <Heading>Step 2: Connect Wallet</Heading>
         <InfoBoxStyled>
-          Connect to the testnet you’d like to launch your Goerli validator from.
+          Connect to the testnet you’d like to launch your Holesky validator from.
         </InfoBoxStyled>
         <Button variant="primary" onClick={handleConnectClick}>
           Connect Wallet

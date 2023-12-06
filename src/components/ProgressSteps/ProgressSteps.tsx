@@ -1,34 +1,27 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { TransferStatus } from '@buildwithsygma/sygma-sdk-core';
 import { ReactComponent as LinkIcon } from '../../assets/icons/link.svg';
 import ProgressStep from './ProgressStep';
 
 interface Props {
-  step: number;
-  depositUrl?: string;
-  proposalExecutionUrl?: string;
+  step: TransferStatus;
+  depositUrl: string;
+  explorerUrl?: string;
 }
 
-export function ProgressSteps({
-  step,
-  depositUrl,
-  proposalExecutionUrl,
-}: Props): JSX.Element {
-  const handleSendingStep = (isCompleted: boolean): JSX.Element | string => {
-    if (isCompleted && depositUrl) {
-      return (
-        <Link target="_blank" to={depositUrl}>
-          Sending funds... <LinkIcon />
-        </Link>
-      );
-    } else {
-      return 'Sending funds...';
-    }
+export function ProgressSteps({ step, depositUrl, explorerUrl }: Props): JSX.Element {
+  const handlePendingStep = (): JSX.Element | string => {
+    return (
+      <Link target="_blank" to={depositUrl}>
+        Sending funds... <LinkIcon />
+      </Link>
+    );
   };
   const handleSuccessStep = (): JSX.Element | string => {
-    if (proposalExecutionUrl) {
+    if (explorerUrl) {
       return (
-        <Link target="_blank" to={proposalExecutionUrl}>
+        <Link target="_blank" to={explorerUrl}>
           Success <LinkIcon />
         </Link>
       );
@@ -37,21 +30,15 @@ export function ProgressSteps({
 
   return (
     <ProgressStepsWrapper>
-      <ProgressStep value="1/4" description="Initializing" isCompleted={step >= 0} />
       <ProgressStep
-        value="2/4"
-        description={handleSendingStep(step >= 1)}
-        isCompleted={step >= 1}
+        value="1/2"
+        description={handlePendingStep()}
+        isCompleted={step === 'pending'}
       />
       <ProgressStep
-        value="3/4"
-        description="You are in the deposit queue"
-        isCompleted={step >= 2}
-      />
-      <ProgressStep
-        value="4/4"
+        value="2/2"
         description={handleSuccessStep()}
-        isCompleted={step == 2}
+        isCompleted={step === 'executed'}
       />
     </ProgressStepsWrapper>
   );

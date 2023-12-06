@@ -75,7 +75,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
                 transactionStatus: TransactionStatus.READY,
                 depositStatus: DepositStatus.VERIFYING,
               });
-              //Check of withdrawal credentials match goerli contract address
+              //Check of withdrawal credentials match holesky contract address
               if (
                 `0x${fileData[0].withdrawal_credentials.substring(24)}`.toLowerCase() ===
                 DEPOSIT_ADAPTER_TARGET.toLowerCase()
@@ -188,7 +188,7 @@ export const JSONDropzone: FC<JSONDropzone> = ({ JSONReady, fileNameReady }) => 
   };
 
   const handleWithdrawalAddressNotMatching = (): void => {
-    setFileError(<div>Withdrawal address doesn't match goerli contract address</div>);
+    setFileError(<div>Withdrawal address doesn't match holesky contract address</div>);
   };
 
   const renderMessage = useMemo((): JSX.Element => {
