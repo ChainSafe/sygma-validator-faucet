@@ -4,9 +4,11 @@ import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useWallet } from '../../context/WalletContext';
 import { InfoBox } from '../../components/lib';
+import { useStorage } from '../../context/StorageContext';
 
 export function ConnectWallet(): JSX.Element {
   const wallet = useWallet();
+  const { data } = useStorage();
   const handleConnectClick = (): void => {
     void wallet.connect();
   };
@@ -23,7 +25,7 @@ export function ConnectWallet(): JSX.Element {
         </Button>
       </Wrapper>
     );
-
+  if (data.depositTxHash) return <Navigate to="/transactions" />;
   return <Navigate to="/summary" />;
 }
 

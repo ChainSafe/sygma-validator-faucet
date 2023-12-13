@@ -1,45 +1,54 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { TransferStatus } from '@buildwithsygma/sygma-sdk-core';
+import { TransferStatusResponse } from '@buildwithsygma/sygma-sdk-core';
 import { ReactComponent as LinkIcon } from '../../assets/icons/link.svg';
 import ProgressStep from './ProgressStep';
 
 interface Props {
-  step: TransferStatus;
-  depositUrl: string;
-  explorerUrl?: string;
+  transferStatus?: TransferStatusResponse;
+  depositUrl?: string;
 }
 
-export function ProgressSteps({ step, depositUrl, explorerUrl }: Props): JSX.Element {
-  const handlePendingStep = (): JSX.Element | string => {
-    return (
-      <Link target="_blank" to={depositUrl}>
-        Sending funds... <LinkIcon />
-      </Link>
-    );
+export function ProgressSteps({ transferStatus, depositUrl }: Props): JSX.Element {
+  const handleSendingStep = (): JSX.Element | string => {
+    if (transferStatus) {
+      return (
+        <Link target="_blank" to={depositUrl ?? ''}>
+          Deposit URL <LinkIcon />
+        </Link>
+      );
+    } else return 'Deposit pending...';
   };
   const handleSuccessStep = (): JSX.Element | string => {
-    if (explorerUrl) {
+    if (transferStatus?.status) {
       return (
-        <Link target="_blank" to={explorerUrl}>
-          Success <LinkIcon />
+        <Link target="_blank" to={transferStatus.explorerUrl}>
+          Transfer status: {transferStatus?.status} <LinkIcon />
         </Link>
       );
     } else return 'Success';
   };
-
   return (
     <ProgressStepsWrapper>
       <ProgressStep
-        value="1/2"
-        description={handlePendingStep()}
-        isCompleted={step === 'pending'}
+        value="1/3"
+        description={depositUrl ? 'Transaction send' : 'Pending transaction...'}
+        isCompleted={!!depositUrl}
       />
-      <ProgressStep
-        value="2/2"
-        description={handleSuccessStep()}
-        isCompleted={step === 'executed'}
-      />
+      {!!depositUrl && (
+        <ProgressStep
+          value="2/3"
+          description={handleSendingStep()}
+          isCompleted={!!transferStatus}
+        />
+      )}
+      {!!transferStatus && (
+        <ProgressStep
+          value="3/3"
+          description={handleSuccessStep()}
+          isCompleted={!!transferStatus && transferStatus.status === 'executed'}
+        />
+      )}
     </ProgressStepsWrapper>
   );
 }

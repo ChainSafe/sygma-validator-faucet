@@ -1,5 +1,6 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import _merge from 'lodash/merge';
+import { TransferStatusResponse } from '@buildwithsygma/sygma-sdk-core';
 import { DepositKeyInterface } from '../components/JSONDropzone/validation';
 
 interface Data {
@@ -10,6 +11,8 @@ interface Data {
     signature: string;
     deposit_data_root: string;
   };
+  transferStatus?: TransferStatusResponse;
+  depositTxHash?: string;
 }
 
 interface StorageContextContextInterface {

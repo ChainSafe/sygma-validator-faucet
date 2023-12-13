@@ -1,34 +1,35 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Config,
   Environment,
   EthereumConfig,
   FeeHandlerType,
-  TransferStatusResponse,
-  getTransferStatusData,
 } from '@buildwithsygma/sygma-sdk-core';
 import { utils } from 'web3';
 import { useEnsuredWallet } from '../context/WalletContext';
-import { getNetwork } from '../utils/network';
+import { useStorage } from '../context/StorageContext';
+import { FlowActionTypes, FlowContext } from '../context/FlowContext';
 
 interface SygmaSDK {
   basicFeeContractAddress: string | null;
   originBridgeAddress: string | null;
   depositTxHashCallback: (txHash: string) => void;
-  depositUrl: string | null;
-  transferStatus: TransferStatusResponse | null;
 }
 
 export function useSygmaSDK(): SygmaSDK {
   const wallet = useEnsuredWallet();
+  const storage = useStorage();
+  const [, dispatch] = useContext(FlowContext);
+
   const [basicFeeContractAddress, setBasicFeeContractAddress] = useState<string | null>(
     null,
   );
   const [originBridgeAddress, setOriginBridgeAddress] = useState<string | null>(null);
-  const [depositUrl, setDepositUrl] = useState<string | null>(null);
-  const [transferStatus, setTransferStatus] = useState<TransferStatusResponse | null>(
-    null,
-  );
+
+  const depositTxHashCallback = (depositTxHash: string): void => {
+    dispatch({ type: FlowActionTypes.DEPOSIT_COMPLETE, payload: true });
+    storage.update({ depositTxHash });
+  };
 
   useEffect(() => {
     void (async () => {
@@ -39,8 +40,7 @@ export function useSygmaSDK(): SygmaSDK {
           Environment.TESTNET,
         );
         const sourceDomainConfig = sygmaConfig.getSourceDomainConfig() as EthereumConfig;
-        console.log('sygmaConfig');
-        console.log(sygmaConfig);
+
         const basicFeeHandler = sourceDomainConfig.feeHandlers.find(
           (e) => e.type === FeeHandlerType.BASIC,
         );
@@ -55,34 +55,9 @@ export function useSygmaSDK(): SygmaSDK {
     })();
   }, [wallet.web3]);
 
-  const depositTxHashCallback = useCallback((txHash: string) => {
-    let controller: AbortController;
-    let interval: number | undefined;
-    setDepositUrl(`${getNetwork(wallet.chainId).blockExplorerUrl}tx/${txHash}`);
-    try {
-      interval = setInterval(() => {
-        controller = new AbortController();
-        void getTransferStatusData(Environment.TESTNET, txHash).then((transferStatus) => {
-          console.log(transferStatus);
-          setTransferStatus(transferStatus);
-        });
-      }, 2000) as unknown as number;
-    } catch (e) {
-      setTransferStatus(null);
-      throw e;
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-      if (controller) controller.abort();
-    };
-  }, []);
-
   return {
     basicFeeContractAddress,
     originBridgeAddress,
     depositTxHashCallback,
-    depositUrl,
-    transferStatus,
   };
 }

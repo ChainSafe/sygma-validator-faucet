@@ -93,15 +93,13 @@ export function Summary(): JSX.Element {
       );
 
       const gas = await depositMethod.estimateGas({ value: value.toString() });
-
+      navigate('/transactions');
       const response = await depositMethod.send({
         from: accounts[0],
         gas: gas.toString(),
         value: value.toString(),
       });
-
       depositTxHashCallback(response.transactionHash);
-      navigate('/transactions');
     } catch (e) {
       console.log(e);
       throw e;
