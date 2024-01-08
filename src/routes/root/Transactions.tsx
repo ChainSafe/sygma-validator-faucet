@@ -32,16 +32,12 @@ export function Transactions(): JSX.Element {
   useEffect(() => {
     let controller: AbortController;
     let interval: number | undefined;
-    if (!depositTxHash) {
-      console.log('no depositTxHash');
-      return;
-    }
+    if (!depositTxHash) return;
     // eslint-disable-next-line
     interval = setInterval(() => {
       controller = new AbortController();
       void getTransferStatusData(Environment.TESTNET, depositTxHash).then(
         (transferStatus) => {
-          console.log(transferStatus);
           update({ transferStatus });
           setTransferStatusData(transferStatus);
           if (transferStatus.status === 'executed') {
