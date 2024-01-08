@@ -32,15 +32,15 @@ export function Upload(): JSX.Element {
       <Heading>Step 1: Upload Deposit Data</Heading>
       <InfoBox>
         Have you generated your deposit data json file? If not,{' '}
-        <a href="https://goerli.launchpad.ethereum.org/en/overview" target="_blank">
+        <a href="https://github.com/ethereum/staking-deposit-cli" target="_blank">
           you can do so here.
         </a>
         <br />
-        Make sure to set "Withdrawal address" to
+        Make sure to set "--execution_address (or --eth1_withdrawal_address)" to
         <b>
           {' '}
-          {import.meta.env.REACT_APP_DESTINATION_CONTRACT ??
-            '0xbdeebc18cbe64a09e4da0bc82cffb6ac5261f9a8'}
+          {import.meta.env.REACT_APP_DEPOSIT_ADAPTER_TARGET ??
+            '0x6dA088adB96de645D4c4F769dB523BC0C8638aA9'}
         </b>
         . We are only funding validators that will return funds to our contract in case of
         voluntary exit!

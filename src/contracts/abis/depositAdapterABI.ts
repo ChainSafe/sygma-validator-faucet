@@ -117,6 +117,25 @@ export const DepositAdapterABI = [
     type: 'event',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'Withdrawal',
+    type: 'event',
+  },
+  {
     inputs: [],
     name: 'DEFAULT_ADMIN_ROLE',
     outputs: [
@@ -294,6 +313,25 @@ export const DepositAdapterABI = [
   {
     inputs: [
       {
+        internalType: 'bytes',
+        name: 'depositContractCalldata',
+        type: 'bytes',
+      },
+    ],
+    name: 'prepareDepositData',
+    outputs: [
+      {
+        internalType: 'bytes',
+        name: '',
+        type: 'bytes',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'bytes32',
         name: 'role',
         type: 'bytes32',
@@ -330,6 +368,30 @@ export const DepositAdapterABI = [
   {
     inputs: [
       {
+        internalType: 'bytes',
+        name: 'input',
+        type: 'bytes',
+      },
+      {
+        internalType: 'uint256',
+        name: 'position',
+        type: 'uint256',
+      },
+    ],
+    name: 'slice',
+    outputs: [
+      {
+        internalType: 'bytes',
+        name: '',
+        type: 'bytes',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'bytes4',
         name: 'interfaceId',
         type: 'bytes4',
@@ -344,6 +406,24 @@ export const DepositAdapterABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address payable',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ] as const;

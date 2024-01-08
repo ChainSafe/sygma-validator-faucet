@@ -18,12 +18,12 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
+      - run: corepack enable
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '19'
           cache: 'yarn'
-      - run: corepack enable
       - name: Install deps
         run: yarn --no-immutable
       - name: Lint
@@ -33,12 +33,12 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      - run: corepack enable
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '19'
           cache: 'yarn'
-      - run: corepack enable
       - name: Install deps
         run: yarn --no-immutable
       - name: Build

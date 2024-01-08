@@ -6,24 +6,28 @@ export interface FlowState {
   userAddress: string | null;
   depositJSON: DepositKeyInterface | null;
   fileName: string;
+  depositComplete: boolean;
 }
 
 export enum FlowActionTypes {
   SET_USER_ADDRESS,
   SET_DEPOSIT_JSON,
   SET_FILE_NAME,
+  DEPOSIT_COMPLETE,
 }
 
 const initialState: FlowState = {
   userAddress: null,
   depositJSON: null,
   fileName: '',
+  depositComplete: false,
 };
 
 type FlowStatePayload = {
   [FlowActionTypes.SET_USER_ADDRESS]: string;
   [FlowActionTypes.SET_DEPOSIT_JSON]: DepositKeyInterface;
   [FlowActionTypes.SET_FILE_NAME]: string;
+  [FlowActionTypes.DEPOSIT_COMPLETE]: boolean;
 };
 
 export type FlowStateDispatch =
@@ -52,6 +56,12 @@ const reducer: Reducer<FlowState, FlowStateDispatch> = (state, action) => {
       return {
         ...state,
         fileName: action.payload,
+      };
+    }
+    case FlowActionTypes.DEPOSIT_COMPLETE: {
+      return {
+        ...state,
+        depositComplete: action.payload,
       };
     }
     default: {

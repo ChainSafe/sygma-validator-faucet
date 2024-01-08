@@ -4,9 +4,11 @@ import { Heading } from '../../components/Heading';
 import { Button } from '../../components/Button';
 import { useWallet } from '../../context/WalletContext';
 import { InfoBox } from '../../components/lib';
+import { useStorage } from '../../context/StorageContext';
 
 export function ConnectWallet(): JSX.Element {
   const wallet = useWallet();
+  const { data } = useStorage();
   const handleConnectClick = (): void => {
     void wallet.connect();
   };
@@ -16,14 +18,14 @@ export function ConnectWallet(): JSX.Element {
       <Wrapper>
         <Heading>Step 2: Connect Wallet</Heading>
         <InfoBoxStyled>
-          Connect to the testnet you’d like to launch your Goerli validator from.
+          Connect to the testnet you’d like to launch your Holesky validator from.
         </InfoBoxStyled>
         <Button variant="primary" onClick={handleConnectClick}>
           Connect Wallet
         </Button>
       </Wrapper>
     );
-
+  if (data.depositTxHash) return <Navigate to="/transactions" />;
   return <Navigate to="/summary" />;
 }
 

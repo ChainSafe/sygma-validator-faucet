@@ -1,160 +1,63 @@
-import { useEffect, useState } from 'react';
-import { Contract, eth, utils } from 'web3';
+import { useContext, useEffect, useState } from 'react';
+import {
+  Environment,
+  TransferStatusResponse,
+  getTransferStatusData,
+} from '@buildwithsygma/sygma-sdk-core';
 import { Heading } from '../../components/Heading';
 import ProgressSteps from '../../components/ProgressSteps/ProgressSteps';
 import { useStorage } from '../../context/StorageContext';
+import { getNetwork } from '../../utils/network';
 import { useEnsuredWallet } from '../../context/WalletContext';
-import { bridgeABI } from '../../contracts';
-import {
-  getBridgeAddress,
-  getDomainID,
-  getNetwork,
-  NetworksChainID,
-} from '../../utils/network';
-
-enum TX_STEPS {
-  Initializig,
-  SendingFunds,
-  Success,
-  Faliure,
-}
+import { FlowContext } from '../../context/FlowContext';
 
 export function Transactions(): JSX.Element {
+  const { data, update } = useStorage();
   const wallet = useEnsuredWallet();
-  const storage = useStorage();
+  const [{ depositComplete }] = useContext(FlowContext);
 
-  const [steps, setSteps] = useState<TX_STEPS>(TX_STEPS.Initializig);
-  const [logCompareData, setLogCompareData] = useState<{
-    originDomainID: bigint;
-    depositNonce: bigint;
-  } | null>(null);
-  const [depositUrl, setDepositUrl] = useState<string | undefined>();
-  const [proposalExecutionUrl, setProposalExecutionUrl] = useState<string | undefined>();
+  const [transferStatusData, setTransferStatusData] = useState<TransferStatusResponse>();
+  const [depositTxHash, setDepositTxHash] = useState<string | null>(null);
+
+  const depositUrl = `${getNetwork(wallet.chainId).blockExplorerUrl}tx/${
+    depositTxHash ?? ''
+  }`;
 
   useEffect(() => {
-    void (async () => {
-      if (steps === TX_STEPS.Initializig) {
-        const bridgeAddress = getBridgeAddress(wallet.chainId as NetworksChainID);
-        const { depositContractCalldata } = storage.data;
+    if (data.depositTxHash) {
+      setDepositTxHash(data.depositTxHash);
+    }
+  }, [data.depositTxHash, depositComplete]);
 
-        if (!depositContractCalldata) return;
-        const originBridgeContract = new wallet.web3.eth.Contract(
-          bridgeABI,
-          bridgeAddress,
-        );
+  useEffect(() => {
+    let controller: AbortController;
+    let interval: number | undefined;
+    if (!depositTxHash) return;
+    // eslint-disable-next-line
+    interval = setInterval(() => {
+      controller = new AbortController();
+      void getTransferStatusData(Environment.TESTNET, depositTxHash).then(
+        (transferStatus) => {
+          update({ transferStatus });
+          setTransferStatusData(transferStatus);
+          if (transferStatus.status === 'executed') {
+            clearInterval(interval);
+            controller.abort();
+          }
+        },
+      );
+    }, 2000) as unknown as number;
 
-        type relevantLogData = {
-          nonce: bigint;
-          transactionHash?: string;
-        };
-        const depositLogData: relevantLogData = await new Promise((resolve) => {
-          const originInterval = setInterval(() => {
-            void originBridgeContract.getPastEvents('Deposit').then((logs) => {
-              const filteredLog = logs.filter((log) => {
-                if (typeof log === 'string' || typeof log.returnValues.data !== 'string')
-                  return false;
-                return log.returnValues.data.includes(depositContractCalldata.pubkey);
-              }) as eth.contract.EventLog[];
-              if (filteredLog.length)
-                resolve({
-                  nonce: filteredLog[0].returnValues.depositNonce as bigint,
-                  transactionHash: filteredLog[0].transactionHash,
-                });
-              clearInterval(originInterval);
-            });
-          }, 1000 * 5);
-        });
-
-        setLogCompareData({
-          originDomainID: getDomainID(wallet.chainId),
-          depositNonce: depositLogData.nonce,
-        });
-        setDepositUrl(
-          `${getNetwork(wallet.chainId).blockExplorerUrl}tx/${
-            depositLogData.transactionHash || ''
-          }`,
-        );
-        setSteps(TX_STEPS.SendingFunds);
-      }
-
-      if (steps === TX_STEPS.SendingFunds) {
-        await wallet.ensureNetwork(NetworksChainID.GOERLI);
-
-        const goerliBridgeContract: Contract<typeof bridgeABI> =
-          new wallet.web3.eth.Contract(
-            bridgeABI,
-            getBridgeAddress(NetworksChainID.GOERLI),
-          );
-
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        const successInterval = setInterval(() => {
-          void (async () => {
-            const pastEvents = await goerliBridgeContract.getPastEvents(
-              'ProposalExecution',
-            );
-            pastEvents.forEach((log) => {
-              const pastLog = log as eth.contract.EventLog;
-              const logDepositNonce = utils.toBigInt(
-                (pastLog.returnValues.depositNonce as string).toString(),
-              );
-              const sentTxDepositNonce = utils.toBigInt(
-                logCompareData?.depositNonce.toString(),
-              );
-              const logOriginDomainID = utils.toBigInt(
-                (pastLog.returnValues.originDomainID as string).toString(),
-              );
-              const sentTxOriginDomainID = utils.toBigInt(
-                logCompareData?.originDomainID.toString(),
-              );
-              if (
-                logDepositNonce == sentTxDepositNonce &&
-                logOriginDomainID == sentTxOriginDomainID
-              ) {
-                setProposalExecutionUrl(
-                  `https://goerli.etherscan.io/tx/${pastLog.transactionHash || ''}`,
-                );
-                setSteps(TX_STEPS.Success);
-                clearInterval(successInterval);
-                clearInterval(failedInterval);
-              }
-            });
-          })();
-        }, 1000 * 5);
-
-        const failedInterval = setInterval(() => {
-          void (async () => {
-            const pastEvents = await goerliBridgeContract.getPastEvents(
-              'FailedHandlerExecution',
-            );
-            pastEvents.forEach((log) => {
-              const pastLog = log as eth.contract.EventLog;
-              if (
-                pastLog.returnValues.depositNonce == logCompareData?.depositNonce &&
-                pastLog.returnValues.originDomainID == logCompareData?.originDomainID
-              ) {
-                setSteps(TX_STEPS.Faliure);
-                clearInterval(failedInterval);
-                clearInterval(successInterval);
-              }
-            });
-          })();
-        }, 1000 * 5);
-      }
-    })();
-  }, [steps]);
+    return () => {
+      if (interval) clearInterval(interval);
+      if (controller) controller.abort();
+    };
+  }, [depositTxHash]);
 
   return (
     <>
       <Heading>Step 4: Transactions</Heading>
-      {steps < TX_STEPS.Faliure ? (
-        <ProgressSteps
-          step={steps}
-          depositUrl={depositUrl}
-          proposalExecutionUrl={proposalExecutionUrl}
-        />
-      ) : (
-        <p>Could not launch a validator on Goerli</p>
-      )}
+      <ProgressSteps transferStatus={transferStatusData} depositUrl={depositUrl} />
     </>
   );
 }

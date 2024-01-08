@@ -16,12 +16,14 @@ import { DepositDataJSON } from '../../components/JSONDropzone/validation';
 import { useStorage } from '../../context/StorageContext';
 import { ButtonStyled } from '../../components/Button/Button';
 import { useBasicFee } from '../../hooks/useBasicFee';
+import { useSygmaSDK } from '../../hooks/useSygma';
 
 export function Summary(): JSX.Element {
   const wallet = useEnsuredWallet();
   const storage = useStorage();
   const navigate = useNavigate();
   const [basicFee] = useBasicFee();
+  const { depositTxHashCallback } = useSygmaSDK();
 
   const [selectedNetwork, setSelectedNetwork] = useState<NetworksChainID | null>(null);
 
@@ -83,19 +85,21 @@ export function Summary(): JSX.Element {
       const depositFeeBigint = wallet.web3.utils.toBigInt(depositFee.toString());
       const value = depositFeeBigint + basicFee;
 
+      const DESTINATION_DOMAN_ID_HOLESKY = 6;
       const depositMethod = depositAdapterContract.methods.deposit(
-        1,
+        DESTINATION_DOMAN_ID_HOLESKY,
         depositContractCalldata,
         '0x',
       );
 
       const gas = await depositMethod.estimateGas({ value: value.toString() });
-      await depositMethod.send({
+      navigate('/transactions');
+      const response = await depositMethod.send({
         from: accounts[0],
         gas: gas.toString(),
         value: value.toString(),
       });
-      navigate('/transactions');
+      depositTxHashCallback(response.transactionHash);
     } catch (e) {
       console.log(e);
       throw e;
@@ -126,16 +130,10 @@ export function Summary(): JSX.Element {
         <h2>Chose network:</h2>
         <ButtonWrapper>
           <ButtonSelectNetwork
-            onClick={(): void => void handleChooseNetwork(NetworksChainID.MOONBASE)}
-            variant={handleButtonVariant(NetworksChainID.MOONBASE)}
+            variant={handleButtonVariant(NetworksChainID.GOERLI)}
+            onClick={(): void => void handleChooseNetwork(NetworksChainID.GOERLI)}
           >
-            MOONBASE
-          </ButtonSelectNetwork>
-          <ButtonSelectNetwork
-            variant={handleButtonVariant(NetworksChainID.MUMBAI)}
-            onClick={(): void => void handleChooseNetwork(NetworksChainID.MUMBAI)}
-          >
-            MUMBAI
+            GOERLI
           </ButtonSelectNetwork>
           <ButtonSelectNetwork
             variant={handleButtonVariant(NetworksChainID.SEPOLIA)}
@@ -147,7 +145,7 @@ export function Summary(): JSX.Element {
         {errorMsg && <p>{errorMsg}</p>}
         {selectedNetwork && (
           <InfoBox>
-            You’re about to launch a validator on Goerli{' '}
+            You’re about to launch a validator on Holesky{' '}
             <b>{getNetwork(selectedNetwork).chainName}</b>. Is that correct?
           </InfoBox>
         )}
